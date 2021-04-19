@@ -1,0 +1,72 @@
+button {
+  cursor: pointer;
+  background-color: var(--color-featureLight);
+  border-radius: 0;
+  border: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+  padding: 0 12px;
+  outline: 0;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.small {
+    height: 32px;
+  }
+
+  &.big {
+    height: 40px;
+  }
+
+  &.full {
+    width: 100%;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &.success {
+    background-color: var(--color-unlocked);
+  }
+
+  &.danger,
+  &.error {
+    background-color: var(--color-locked);
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &.clear {
+    background-color: var(--color-bgLight);
+    border: 1px solid var(--color-border);
+  }
+}
+
+a {
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.button {
+    height: 32px;
+    font-size: 16px;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.large {
+    height: 40px;
+  }
+}

@@ -1,0 +1,42 @@
+@import '../../style/all.scss';
+
+.guest {
+  display: flex;
+  justify-content: center;
+  &--hide {
+    visibility: hidden;
+  }
+
+  &--none {
+    display: none;
+  }
+
+  &__box {
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+
+    > div {
+      padding: 12px;
+    }
+  }
+
+  &__view {
+    display: flex;
+    font-weight: 600;
+    font-size: 1.2em;
+    justify-content: center;
+    cursor: pointer;
+    width: 50%;
+
+    &--sel {
+      border-bottom: 2px solid var(--color-feature);
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+}

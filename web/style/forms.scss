@@ -1,0 +1,161 @@
+input,
+input[type='text'],
+input[type='number'],
+input[type='password'] {
+  border: 0;
+  box-shadow: none;
+  height: 32px;
+  padding: 0px 16px;
+  font-size: 14px;
+  outline: 0;
+
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    color: #ccc;
+  }
+
+  &.big {
+    height: 40px;
+  }
+}
+
+input.checkbox[type='checkbox'] {
+  display: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+input.checkbox + span.checkbox {
+  position: static;
+  display: inline-block;
+  cursor: pointer;
+  border: 0px solid var(--color-feature);
+  background-color: white;
+  font-size: 14px;
+  height: 21px;
+  width: 23px;
+  transition: 0.1s;
+  background-position: center;
+  color: black;
+}
+
+input.checkbox:checked + span.checkbox {
+  background-color: var(--color-accept);
+}
+
+label {
+  font-size: 14px;
+  user-select: none;
+}
+
+.group {
+  display: flex;
+  flex-direction: row;
+
+  &__prefix {
+    background-color: var(--color-bg);
+    border: 0;
+    font-size: 16px;
+    padding: 12px 8px;
+    max-height: 16px;
+  }
+
+  button {
+    height: 32px;
+    padding: 0 12px;
+    margin: 0;
+
+    &.big {
+      height: 40px;
+    }
+  }
+
+  input {
+    width: fit-content;
+    &.big {
+      height: 40px;
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    font-size: 16px;
+    padding: 8px 8px;
+    max-height: 14px;
+  }
+
+  &__button {
+    cursor: pointer;
+    background-color: var(--color-feature);
+    border: 0;
+    font-size: 16px;
+    padding: 8px 8px;
+    max-height: 16px;
+
+    &.disabled {
+      cursor: not-allowed;
+      // background-color: darken(var(--color-feature), 20%);
+      // color: darken(var(--color-text), 50%);
+    }
+  }
+}
+
+select {
+  border-radius: 0;
+  outline: 0;
+  height: 40px;
+}
+
+.select {
+  width: fit-content;
+  position: relative;
+  display: inline-block;
+  height: 32px;
+}
+
+.select select {
+  height: 32px;
+  cursor: pointer;
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  min-width: 120px;
+  text-overflow: '';
+  -webkit-appearance: button; /* hide default arrow in chrome OSX */
+}
+
+.select::before,
+.select::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.select::after {
+  content: '\25BC';
+  font-size: 12px;
+  line-height: 0;
+  right: 10px;
+  top: 16px;
+}
+
+.select select[disabled] {
+  background-color: var(--color-feature);
+}
+
+.select::before {
+  border: 0;
+  width: 32px;
+  height: 32px;
+  right: 0;
+
+  background-color: var(--color-feature);
+}

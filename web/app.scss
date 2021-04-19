@@ -1,0 +1,106 @@
+@import './style/all.scss';
+
+.hide {
+  display: none;
+}
+
+.toast {
+  visibility: hidden;
+  color: #fff;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1000;
+  right: 8px;
+  bottom: 8px;
+
+  .toast__show {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    margin: 8px;
+    min-width: 300px;
+    visibility: visible;
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  .toast__title {
+    font-weight: 600;
+    padding: 8px;
+  }
+
+  .toast__msg {
+    background-color: var(--color-bgLight);
+    padding: 8px;
+  }
+
+  .info {
+    background-color: var(--color-info);
+  }
+
+  .warn {
+    background-color: var(--color-warn);
+  }
+
+  .success {
+    background-color: var(--color-success);
+  }
+
+  .error {
+    background-color: var(--color-error);
+  }
+
+  .naked {
+    border: 1px solid var(--color-feature);
+    background > .toast__title {
+      display: none;
+    }
+  }
+}
+
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
