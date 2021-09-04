@@ -5,7 +5,12 @@ dotenv.config()
 export const config = {
   appEnv: getEnv('APP_ENV', 'dev'),
   logLevel: getEnv('LOG_LEVEL', 'info'),
+  baseUrl: getEnv('BASE_URL', 'http://localhost:3000'),
   port: Number(getEnv('PORT', '3000')),
+  auth: {
+    facebook: getEnv('FACEBOOK', ''),
+    google: getEnv('GOOGLE', ''),
+  },
   db: {
     host: getEnv('DB_HOST', 'localhost:27018'),
     database: getEnv('DB_DATABASE', 'webapp'),
@@ -28,6 +33,6 @@ export const config = {
 
 function getEnv(key: string, fallback?: string): string {
   const value = process.env[key] ?? fallback
-  if (!value) throw new Error(`Missing environment variable: "${key}"`)
+  if (value === undefined) throw new Error(`Missing environment variable: "${key}"`)
   return value
 }

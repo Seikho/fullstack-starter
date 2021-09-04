@@ -1,14 +1,14 @@
 import { DomainEvent, DomainCmd } from '../util'
 
 export type UserEvent =
-  | DomainEvent<'UserCreated', { isAdmin: boolean }>
+  | DomainEvent<'UserCreated', { isAdmin: boolean; username: string }>
   | DomainEvent<'AliasUpdated', { alias: string }>
   | DomainEvent<'EmailUpdated', { email: string }>
   | DomainEvent<'PasswordReset', { token: string }>
   | DomainEvent<'PasswordChanged'>
 
 export type UserCmd =
-  | DomainCmd<'CreateUser', { isAdmin?: boolean }>
+  | DomainCmd<'CreateUser', { isAdmin?: boolean; username: string }>
   | DomainCmd<'RequestReset', { isAdmin: boolean }>
   | DomainCmd<'ChangePassword'>
   | DomainCmd<'UpdateAlias', { alias: string }>

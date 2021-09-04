@@ -1,12 +1,14 @@
-import { table } from '../db/event'
+import { db } from '../db/event'
 import { Event } from 'evtstore'
 import { createProvider } from 'evtstore/provider/mongo'
-import { logger } from '../logger'
+import { tables } from 'src/db/collection'
+import { logger } from 'svcready'
 
-export async function getProvider<T extends Event>() {
+export async function getProvider<T extends Event = any>() {
+  await db
   const provider = createProvider<T>({
-    bookmarks: table.bookmarks,
-    events: table.events,
+    bookmarks: tables.bookmarks(),
+    events: tables.events(),
     onError: (err, stream, bookmark) =>
       logger.error({ err }, `Unhandled error in ${stream}:${bookmark}`),
   })

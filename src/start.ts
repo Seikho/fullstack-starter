@@ -1,21 +1,26 @@
 require('module-alias/register')
+import { logger } from 'svcready'
 import { auth } from './db/auth'
+import { db, setDb } from './db/event'
 import { migrate } from './db/migrate'
 import { userDomain } from './domain/user'
 import { config } from './env'
-import { logger } from './logger'
 import { userManager } from './manager/user'
-import { createServer } from './server'
+import { server } from './server'
 
 export async function start() {
   await migrate()
+  const client = await db
+  setDb(client)
+
   userManager.handler.start()
-  createServer(1)
+  server.start()
 
   const user = await auth.getUser(config.init.user)
   if (!user) {
+    const lowered = config.init.user.toLowerCase()
     await auth.createUser(config.init.user, config.init.password)
-    await userDomain.cmd.CreateUser(config.init.user, { isAdmin: true })
+    await userDomain.cmd.CreateUser(config.init.user, { isAdmin: true, username: lowered })
     logger.info({ user: config.init.user }, 'Created default user')
   }
 }

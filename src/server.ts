@@ -1,64 +1,32 @@
-import * as express from 'express'
-import * as bodyParser from 'body-parser'
-import * as cors from 'cors'
-import { config } from './env'
-import { logMiddleware, createLogger } from './logger'
+import { create, logger } from 'svcready'
 import api from './api'
-import web from './api/web'
-import { setupWebsocketServer } from './ws'
-import { CommandError } from 'evtstore'
+import { auth } from './db/auth'
+import { config } from './env'
 
-export function createServer(id: number): void {
-  const { app, log } = createApp(id)
-  const port = config.port
+export const server = create({
+  logging: true,
+  sockets: true,
+  port: config.port,
+  auth: {
+    trustProxy: true,
+    secret: config.jwtSecret,
+    cookie: {
+      secure: false,
+      sameSite: 'strict',
+    },
+    getUser: async (id) => {
+      const user = await auth.getUser(id)
+      if (!user) return
+      return { userId: user.userId, hash: user.hash }
+    },
+  },
+})
 
-  const server = app.listen(port, () => {
-    log.info(`App is running at http://localhost:${port}/ in ${app.get('env')} mode.`)
-    log.info('Press CTRL-C to stop.')
-  })
+const { app } = server
 
-  const { interval } = setupWebsocketServer(server)
+app.use('/api', api)
 
-  process.on('SIGTERM', () => {
-    server.close(() => {
-      clearInterval(interval)
-      log.info(`Server stopped. App received SIGTERM`)
-    })
-  })
-}
-
-export function createApp(id: number) {
-  const log = createLogger('api')
-  log.fields.workerId = id
-  const app = express()
-
-  app.use(logMiddleware)
-  app.use(cors())
-  app.use(bodyParser.urlencoded({ extended: true }))
-  app.use(bodyParser.json())
-
-  app.use('/api', api)
-  app.use(web)
-
-  app.use(errorHandler)
-
-  return { app, log }
-}
-
-function errorHandler(
-  err: any,
-  req: express.Request,
-  res: express.Response,
-  _next: express.NextFunction
-) {
-  if (err instanceof CommandError) {
-    const code = err.code || 'UNKNOWN'
-    res.status(400).send({ message: err.message, code })
-    return
-  }
-
-  const message = err.status ? err.message : 'Internal server error'
-  req.log.error({ err }, 'Unhandled exception')
-  res.status(err.status || 500).send({ message })
-  return
-}
+process.on('SIGTERM', () => {
+  server.stop()
+  logger.info(`Server stopped. App received SIGTERM`)
+})

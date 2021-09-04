@@ -1,5 +1,5 @@
 import { Timestamp, ChangeStream } from 'mongodb'
-import { createLogger } from '../logger'
+import { createLogger } from 'svcready'
 import { db } from './event'
 
 const logger = createLogger('sockets')

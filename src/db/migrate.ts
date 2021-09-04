@@ -1,18 +1,16 @@
 import * as path from 'path'
-import { createLogger } from '../logger'
+import { createLogger } from 'svcready'
 import { ensureIndexes } from './indexes'
 import { migrate as migrateEvts } from 'evtstore/provider/mongo'
 import { Db } from 'mongodb'
-import { table } from './event'
+import { tables } from './collection'
 import { config } from 'src/env'
 
 type EnsureFunc = (db: Db) => Promise<void>
 
 export async function migrate() {
   await run(path.resolve(__dirname, 'settings.js'), ensureIndexes)
-  const events = await table.events
-  const bookmarks = await table.bookmarks
-  await migrateEvts(events, bookmarks)
+  await migrateEvts(tables.events(), tables.bookmarks())
 }
 
 async function run(configFile: string, ensure: EnsureFunc) {
@@ -31,10 +29,9 @@ async function run(configFile: string, ensure: EnsureFunc) {
     file: configFile,
   }
 
-  log.info('Connecting')
   const { client } = await database.connect()
   const db = client.db(config.db.database)
-  log.info(`Migrating...`)
+  log.info(`Migrating`)
   try {
     const applied = await up(db)
     if (applied.length) {

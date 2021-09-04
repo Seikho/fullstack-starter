@@ -1,28 +1,38 @@
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { db } from './event'
+import { getDb } from './event'
 import { config } from '../env'
 import { userManager } from '../manager/user'
+import { CommandError } from 'evtstore'
+import { v4 } from 'uuid'
 
 type Auth = {
+  userId: string
   username: string
   hash: string
 }
-
-const table = db.then((db) => db.collection<Auth>('auth'))
+const table = () => getDb().collection<Auth>('auth')
 
 async function createUser(username: string, password: string) {
-  const user = await table.then((coll) => coll.findOne({ username }))
+  const userId = v4()
+  const user = await table().findOne({ username })
   if (user) {
-    throw new Error('User already exists')
+    throw new CommandError('User already exists', 'USER_EXISTS')
   }
 
   const hash = await encrypt(password)
-  await table.then((coll) => coll.insertOne({ username, hash }))
+  await table().insertOne({ userId, username, hash })
+  await userManager.store.createUser({
+    userId,
+    alias: '',
+    email: '',
+    isAdmin: false,
+  })
+  return userId
 }
 
 async function getUser(username: string) {
-  const user = await table.then((coll) => coll.findOne({ username }))
+  const user = await table().findOne({ username: username.toLowerCase() })
   return user
 }
 
@@ -44,25 +54,26 @@ async function getSalt() {
 }
 
 const ONE_HOUR_MS = 1000 * 60 * 60
-async function createToken(userId: string) {
+async function createToken(user: Omit<Auth, 'hash'>) {
   const expires = Date.now() + ONE_HOUR_MS * config.jwtExpiry
-  const profile = await userManager.store.getUser(userId)
-  const user = await getUser(userId)
+  const profile = await userManager.store.getUser(user.userId)
 
-  if (!user && !profile) {
+  if (!profile) {
     throw new Error('User not found')
   }
 
   const payload: BaseToken = {
     type: 'webapp',
     expires,
-    userId,
+    sub: user.userId,
+    shortsub: user.userId.slice(0, 8),
     ...(profile || {}),
+    username: user.username,
   }
 
   const expiresIn = (ONE_HOUR_MS * config.jwtExpiry) / 1000
   const token = jwt.sign(payload, config.jwtSecret, { expiresIn })
-  return token
+  return { token, payload }
 }
 
 export const auth = {

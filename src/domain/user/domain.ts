@@ -16,7 +16,7 @@ export const domain = createDomain<UserEvent, UserAggregate, UserCmd>(
     fold: (ev) => {
       switch (ev.type) {
         case 'UserCreated':
-          return { state: 'created' }
+          return { state: 'created', isAdmin: ev.isAdmin }
 
         case 'AliasUpdated':
           return { alias: ev.alias }
@@ -41,6 +41,7 @@ export const domain = createDomain<UserEvent, UserAggregate, UserCmd>(
         type: 'UserCreated',
         aggregateId: cmd.aggregateId,
         isAdmin: cmd.isAdmin === true,
+        username: cmd.username,
       }
     },
     UpdateAlias: async (cmd, agg) => {

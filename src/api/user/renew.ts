@@ -2,19 +2,16 @@ import { handle, StatusError } from 'svcready'
 import { auth } from '../../db/auth'
 
 export const renew = handle(async (req, res) => {
+  const expires = req.session.cookie.expires
+  if (!req.session.renew || !expires) {
+    throw new StatusError('Foribdden', 403)
+  }
+
+  if (expires.valueOf() < Date.now()) {
+    throw new StatusError('Foribdden', 403)
+  }
+
   const user = req.user!
-
-  const diff = user.expires - Date.now()
-  const minutes = (diff * 0.001) / 60
-
-  if (minutes > 10) {
-    return res.json(false)
-  }
-
-  if (minutes < -10) {
-    throw new StatusError('Unauthorized', 401)
-  }
-
-  const newToken = await auth.createToken(user.userId)
+  const newToken = await auth.createToken({ userId: user.sub, username: user.sub })
   res.json(newToken)
 })

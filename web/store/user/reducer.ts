@@ -41,7 +41,7 @@ const tokenValid = token ? token.exp > now : false
 
 const { reducer, handle } = createReducer<UserState, UserAction>({
   loggedIn: tokenValid,
-  userId: token?.userId ?? '',
+  userId: token?.sub ?? '',
   isAdmin: false,
   menu: false,
 })
@@ -65,7 +65,7 @@ handle('USER_RECEIVE_LOGIN', (_, { token, error }) => {
       token,
       loggedIn: true,
       alias: payload.alias,
-      userId: payload.userId,
+      userId: payload.sub,
       email: payload.email,
       isAdmin: payload.isAdmin ?? false,
     }
