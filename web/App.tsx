@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { Home } from './page/home'
 import { BrowserRouter as Router, Route, Switch, Redirect, RouteProps } from 'react-router-dom'
 import { Layout, Logout } from './layout'
+import { Success } from './page/home/Success'
 
 export const App = () => {
   return (
@@ -14,6 +15,7 @@ export const App = () => {
       <Router>
         <Layout>
           <Switch>
+            <Public path="/success" component={Success} />
             <Private path="/profile" component={() => <div>Profile</div>} />
             <Private path="/logout" component={Logout} />
             <Public path={['/', '/home']} exact={true} component={Home} />

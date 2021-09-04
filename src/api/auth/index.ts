@@ -6,6 +6,7 @@ import { callback } from './callback'
 import { logger } from 'svcready'
 import { facebook } from './facebook'
 import { google } from './google'
+import { manual } from './manual'
 
 export { router as default }
 
@@ -25,6 +26,8 @@ router.use(passport.initialize() as any)
 
 if (google) router.get('/google', google)
 if (facebook) router.get('/facebook', facebook)
+
+router.post('/login', manual)
 
 router.get(
   '/google/callback',

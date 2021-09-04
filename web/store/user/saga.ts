@@ -10,14 +10,15 @@ saga('APP_INIT', (_, dispatch) => {
 })
 
 saga('USER_REQUEST_LOGIN', async ({ username, password }, dispatch) => {
-  const { result, error } = await api.post('/user/login', { username, password })
+  const { result, error } = await api.post('/auth/login', { username, password })
+  console.log(result, error)
   if (error) {
     dispatch({ type: 'USER_RECEIVE_LOGIN', error })
     dispatch({ type: 'TOAST_ADD', kind: 'error', message: 'Failed to login' })
     return
   }
 
-  dispatch({ type: 'USER_RECEIVE_LOGIN', token: result })
+  dispatch({ type: 'USER_RECEIVE_LOGIN', token: result.token })
 })
 
 saga('USER_REQUEST_REGISTER', async ({ username, password, confirm }, dispatch) => {
