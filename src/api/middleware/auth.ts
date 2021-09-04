@@ -20,6 +20,15 @@ export class StatusError extends Error {
   }
 }
 
+// One week
+const SESSION_TIME = 1440 * 7 * 60 * 1000
+export const sessionMiddleware: RequestHandler = (req, _, next) => {
+  if (!req.user) return next()
+
+  req.session.cookie.expires = new Date(Date.now() + SESSION_TIME)
+  next()
+}
+
 export const authMiddleware: RequestHandler = async (req, _, next) => {
   const user = getToken(req)
   if (!user) {

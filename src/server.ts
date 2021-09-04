@@ -1,5 +1,7 @@
+import * as cors from 'cors'
 import { create, logger } from 'svcready'
 import api from './api'
+import { sessionMiddleware } from './api/middleware/auth'
 import { auth } from './db/auth'
 import { config } from './env'
 
@@ -24,6 +26,8 @@ export const server = create({
 
 const { app } = server
 
+app.use(cors())
+app.use(sessionMiddleware)
 app.use('/api', api)
 
 process.on('SIGTERM', () => {
