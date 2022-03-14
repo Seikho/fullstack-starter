@@ -1,6 +1,6 @@
 import { handle, StatusError } from 'svcready'
 import { auth } from 'src/db/auth'
-import { userDomain } from 'src/domain/user'
+import { userCmd } from 'src/domain/cmd/user'
 
 export const callback = handle(async (req, res) => {
   if (!req.user) throw new StatusError('Unauthorized', 401)
@@ -20,7 +20,7 @@ export const callback = handle(async (req, res) => {
   // Create a new account and profile
   if (!user) {
     const userId = await auth.createUser(profileId, '')
-    await userDomain.cmd.CreateUser(userId, {
+    await userCmd.CreateUser(userId, {
       username: profileId,
       isAdmin: false,
     })

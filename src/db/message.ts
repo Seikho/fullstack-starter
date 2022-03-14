@@ -1,25 +1,20 @@
-import { Timestamp, ChangeStream } from 'mongodb'
+import { client } from './redis'
+import { SocketApi } from 'src/ws/types'
 import { createLogger } from 'svcready'
-import { db } from './event'
 
 const logger = createLogger('sockets')
 
 export interface Message {
-  timestamp: Timestamp
-  expireAt: Date
-
-  target: string
+  target: string | string[]
   type: string
   payload: any
 }
 
 export interface PublishOpts {
-  target: string
+  target: string | string[]
   type: string
-  payload: any
+  payload: Omit<SocketApi, 'type'>
 }
-
-const collection = db.then((coll) => coll.collection<Message>('messages'))
 
 type MsgCallback = (msg: Message) => any
 
@@ -31,11 +26,7 @@ export function subscribe(cb: MsgCallback) {
 
 export async function publish(msg: PublishOpts) {
   try {
-    const expireAt = new Date()
-    expireAt.setSeconds(expireAt.getSeconds() + 5)
-    const timestamp = new Timestamp(0, 0)
-
-    await collection.then((cb) => cb.insertOne({ ...msg, timestamp, expireAt }))
+    await client.publish('messages', JSON.stringify(msg))
   } catch (err) {
     logger.error({ err }, 'Failed to write websocket message')
     // TODO: Retry logic?
@@ -43,46 +34,13 @@ export async function publish(msg: PublishOpts) {
 }
 
 export async function initiate() {
-  const initStream = await getStream()
-  loop(initStream)
-}
+  await client.connect()
+  client.on('message', async (channel, message) => {
+    logger.debug({ channel, message }, 'Message received')
+    const payload = JSON.parse(message)
 
-async function getStream() {
-  const stream = await collection.then((coll) =>
-    coll.watch([{ $match: { operationType: 'insert' } }])
-  )
-
-  logger.info('Websocket change stream established')
-  return stream
-}
-
-async function loop(stream?: ChangeStream) {
-  const changeStream = stream || (await getStream())
-
-  try {
-    while (true) {
-      const msg = await changeStream.next()
-      if (msg) {
-        dispatchMessage(msg.fullDocument)
-      }
-    }
-  } catch (err) {
-    logger.warn({ err }, 'Unexpected error in websocket change stream')
-  }
-
-  await sleep()
-  loop()
-}
-
-function sleep() {
-  return new Promise((resolve) => setTimeout(resolve, 1000))
-}
-
-async function dispatchMessage(msg: Message) {
-  const promises: Promise<any>[] = []
-  for (const cb of callbacks) {
-    promises.push(cb(msg))
-  }
-
-  await Promise.all(promises)
+    const promises = callbacks.map((cb) => cb(payload))
+    await Promise.all(promises)
+  })
+  logger.info('Connected to messages')
 }

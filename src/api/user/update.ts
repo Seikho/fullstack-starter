@@ -1,5 +1,5 @@
+import { userCmd } from 'src/domain/cmd/user'
 import { handle, StatusError } from 'svcready'
-import { userDomain } from '../../domain/user'
 
 type Body = {
   alias?: string
@@ -14,11 +14,11 @@ export const update = handle(async (req, res) => {
 
   const aggregateId = req.user!.sub
   if (alias) {
-    await userDomain.cmd.UpdateAlias(aggregateId, { alias })
+    await userCmd.UpdateAlias(aggregateId, { alias })
   }
 
   if (email) {
-    await userDomain.cmd.UpdateEmail(aggregateId, { email })
+    await userCmd.UpdateEmail(aggregateId, { email })
   }
 
   res.json({ message: 'OK' })

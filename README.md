@@ -28,7 +28,7 @@
 - `/src`: Back-end codebase
   - `/api`: Express routers for top-level routes
   - `/db`: Database helpers and migrations
-  - `/domain`: Each domain and associated tests
+  - `/domain`: Each aggregate (`/domain/agg`), commands (`/domain/cmd`), and associated tests
   - `/ws`: Websocket helpers
   - `/manager`: Process managers
   - `/populator:` Read model populators
@@ -57,7 +57,8 @@ The project includes some helpers with Visual Studio Code and the command line
 
 ### Terminal
 
-- `yarn serve`: Starts the front-end in watch mode
-- `yarn build`: Cleans and builds the backend
-- `yarn start`: Starts the back-end
+- `yarn up`: Start the databases
+- `yarn web:serve`: Starts the front-end in watch mode
+- `yarn srv:build`: Cleans and builds the backend
+- `yarn srv:start`: Starts the back-end
 - `yarn clear`: Deletes the previous build

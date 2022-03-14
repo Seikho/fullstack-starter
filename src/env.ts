@@ -19,6 +19,12 @@ export const config = {
     user: getEnv('DB_USER', 'root'),
     password: getEnv('DB_PASS', 'password'),
   },
+  redis: {
+    host: getEnv('REDIS_HOST', '127.0.0.1'),
+    port: Number(getEnv('REDIS_PORT', '6378')),
+    user: getEnv('REDIS_USER', ''),
+    password: getEnv('REDIS_PASSWORD', ''),
+  },
   jwtSecret: getEnv('JWT_SECRET'),
   jwtExpiry: Number(getEnv('JWT_EXPIRY', '24')),
   mail: {

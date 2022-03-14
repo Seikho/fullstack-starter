@@ -31,7 +31,7 @@ async function createUser(username: string, password: string) {
   return userId
 }
 
-async function getUser(username: string) {
+async function getUser(username: string): Promise<Omit<Auth, '_id'> | null> {
   const user = await table().findOne({ username: username.toLowerCase() })
   return user
 }

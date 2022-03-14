@@ -77,7 +77,15 @@ function handleLogin(msg: SocketWeb, socket: WebSocket): string | void {
   }
 }
 
-function getUserSockets(userId: string) {
+function getUserSockets(userId: string | string[]) {
+  if (Array.isArray(userId)) {
+    const sockets: WebSocket[] = []
+    for (const id of userId) {
+      sockets.push(...(userMap.get(id) || []))
+    }
+    return sockets
+  }
+
   const sockets = userMap.get(userId) || []
   return sockets.slice()
 }

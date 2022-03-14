@@ -1,5 +1,5 @@
-import { UserProfile } from 'src/domain/user/types'
 import { db } from 'src/db/event'
+import { UserProfile } from 'src/domain/types/user'
 
 const coll = db.then((tbl) => tbl.collection<UserProfile>('userProfiles'))
 

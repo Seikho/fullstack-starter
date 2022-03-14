@@ -6,6 +6,6 @@ export const names = {
 }
 
 export const tables = {
-  events: () => getDb().collection(config.db.events),
-  bookmarks: () => getDb().collection(config.db.bookmarks),
+  events: () => getDb().collection<any>(config.db.events),
+  bookmarks: () => getDb().collection<any>(config.db.bookmarks),
 }

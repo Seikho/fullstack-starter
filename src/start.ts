@@ -3,7 +3,7 @@ import { logger } from 'svcready'
 import { auth } from './db/auth'
 import { db, setDb } from './db/event'
 import { migrate } from './db/migrate'
-import { userDomain } from './domain/user'
+import { userCmd } from './domain/cmd/user'
 import { config } from './env'
 import { userManager } from './manager/user'
 import { server } from './server'
@@ -20,7 +20,7 @@ export async function start() {
   if (!user) {
     const lowered = config.init.user.toLowerCase()
     await auth.createUser(config.init.user, config.init.password)
-    await userDomain.cmd.CreateUser(config.init.user, { isAdmin: true, username: lowered })
+    await userCmd.CreateUser(config.init.user, { isAdmin: true, username: lowered })
     logger.info({ user: config.init.user }, 'Created default user')
   }
 }
