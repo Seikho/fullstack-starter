@@ -33,6 +33,8 @@
 
 7. Get started!
 
+- http://localhost:1234
+
 ## Architecture
 
 - `/src`: Back-end codebase
