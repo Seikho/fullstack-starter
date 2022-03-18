@@ -1,12 +1,12 @@
-# NESR
+# Full Stack Starter
 
-> A highly opinionated full-stack starter: TypeScript, Node.JS, Express, CQRS+Event Sourcing, React, and React
+**A highly opinionated full-stack starter: TypeScript, Node.JS, Express, CQRS + Event Sourcing, React, and Redux**
 
 ## Getting Started
 
 1. Clone the repository to your new project folder:
 
-- `git clone git@github.com:seikho/nesr my-project`
+- `git clone git@github.com:seikho/fullstack-starter my-project`
 
 2. Remove the Git history
 
@@ -21,7 +21,17 @@
 
 - `yarn`
 
-5. Get started!
+5. Start the databases
+
+- `yarn db`
+
+6. Start the backend + frontend
+
+- With the TypeScript compiler watching: `yarn start:watch`
+- Without the TypeScript compiler: `yarn start`
+  - Use `Ctrl + Shift + B` or `Cmd + shift + B` within VSCode to build in watch mode
+
+7. Get started!
 
 ## Architecture
 

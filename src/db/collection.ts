@@ -1,5 +1,5 @@
 import { config } from 'src/env'
-import { getDb } from './event'
+import { getDb } from './mongo'
 
 export const names = {
   auth: 'auth',

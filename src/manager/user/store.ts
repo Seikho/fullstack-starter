@@ -1,4 +1,4 @@
-import { db } from 'src/db/event'
+import { db } from 'src/db/mongo'
 import { UserProfile } from 'src/domain/types/user'
 
 const coll = db.then((tbl) => tbl.collection<UserProfile>('userProfiles'))

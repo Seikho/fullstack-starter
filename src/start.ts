@@ -1,7 +1,7 @@
 require('module-alias/register')
 import { logger } from 'svcready'
 import { auth } from './db/auth'
-import { db, setDb } from './db/event'
+import { db, setDb } from './db/mongo'
 import { migrate } from './db/migrate'
 import { userCmd } from './domain/cmd/user'
 import { config } from './env'

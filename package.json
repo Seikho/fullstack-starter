@@ -1,24 +1,31 @@
 {
-  "name": "nesr-start",
+  "name": "fullstack-starter",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear": "rimraf build",
-    "presrv:build": "yarn clear",
+    "// Backend+Frontend scripts": "",
+    "build": "concurrently \"yarn srv:build\" \"yarn web:build\"",
+    "start": "concurrently -n srv,web \"yarn srv:start\" \"yarn web:serve\"",
+    "start:watch": "concurrently -n tsc,srv,web \"yarn srv:watch\" \"yarn srv:start\" \"yarn web:serve\"",
+    "// Backend scripts": "",
     "srv:build": "yarn tsc",
-    "srv:start": "node .",
+    "srv:watch": "yarn tsc -w",
+    "srv:start": "nodemon --watch build -e js build/index.js",
+    "// Frontend scripts": "",
     "web:serve": "parcel index.html",
     "web:build": "parcel build index.html",
-    "up": "docker-compose -p pugg up -d",
-    "down": "docker-compose -p pugg down",
+    "// Database scripts": "",
+    "up": "docker-compose up -d",
+    "down": "docker-compose down",
     "db": "yarn down || true && yarn up"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "_moduleAliases": {
-    "src": "build/src"
+    "src": "build/"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.3.2",
@@ -38,8 +45,10 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/redux": "^3.6.0",
     "@types/ws": "^7.4.0",
+    "concurrently": "^7.0.0",
     "crypto-browserify": "^3.12.0",
     "events": "^3.3.0",
+    "nodemon": "^2.0.15",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "sass": "^1.32.8",

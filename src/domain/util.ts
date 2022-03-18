@@ -1,4 +1,4 @@
-import { db } from '../db/event'
+import { db } from '../db/mongo'
 import { Event } from 'evtstore'
 import { createProvider } from 'evtstore/provider/mongo'
 import { tables } from 'src/db/collection'
@@ -9,8 +9,7 @@ export async function getProvider<T extends Event = any>() {
   const provider = createProvider<T>({
     bookmarks: tables.bookmarks(),
     events: tables.events(),
-    onError: (err, stream, bookmark) =>
-      logger.error({ err }, `Unhandled error in ${stream}:${bookmark}`),
+    onError: (err, stream, bookmark) => logger.error({ err }, `Unhandled error in ${stream}:${bookmark}`),
   })
 
   return provider

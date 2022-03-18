@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { getDb } from './event'
+import { getDb } from './mongo'
 import { config } from '../env'
 import { userManager } from '../manager/user'
 import { CommandError } from 'evtstore'

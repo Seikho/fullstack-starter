@@ -12,7 +12,7 @@ export const config = {
     google: getEnv('GOOGLE', ''),
   },
   db: {
-    host: getEnv('DB_HOST', 'localhost:27018'),
+    host: getEnv('DB_HOST', 'localhost:27020'),
     database: getEnv('DB_DATABASE', 'webapp'),
     events: getEnv('DB_EVENTS', 'events'),
     bookmarks: getEnv('DB_BOOKMARKS', 'bookmarks'),
