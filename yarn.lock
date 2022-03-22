@@ -1723,13 +1723,6 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
-"@types/sqlite3@^3.1.5":
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/@types/sqlite3/-/sqlite3-3.1.7.tgz#84fbc65946603d15cff4968d0cb283d1879dd156"
-  integrity sha512-8FHV/8Uzd7IwdHm5mvmF2Aif4aC/gjrt4axWD9SmfaxITnOjtOhCbOSTuqv/VbH1uq0QrwlaTj9aTz3gmR6u4w==
-  dependencies:
-    "@types/node" "*"
-
 "@types/uuid@^3.4.6":
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.9.tgz#fcf01997bbc9f7c09ae5f91383af076d466594e1"
@@ -2921,12 +2914,10 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-evtstore@^11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/evtstore/-/evtstore-11.2.0.tgz#3237d6a750712ff9b41116d42becce5d7de5af06"
-  integrity sha512-jtF3V4yIXwTqsiLhVtybd+IPvOuBXHsLQDuPXEoLTQsxSgbn8qLx7Ktig+MvwdC30/87yg5+XhLXSGsiH3ol9A==
-  dependencies:
-    "@types/sqlite3" "^3.1.5"
+evtstore@^11.3.1:
+  version "11.3.1"
+  resolved "https://registry.yarnpkg.com/evtstore/-/evtstore-11.3.1.tgz#4d509640968df5f864c7764db7a66d03a96297a7"
+  integrity sha512-A7NyzOk0KpNXmA4u1NTj7y/Brd3KRi+v1k/x32YL/CvS4nmNoJ+j9/C1R5mjxklCEmPCLL/gArsevq+D6ZNSug==
 
 express-session@^1.17.2:
   version "1.17.2"
