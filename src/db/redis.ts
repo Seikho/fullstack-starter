@@ -1,7 +1,10 @@
 import * as redis from 'redis'
 import { config } from 'src/env'
 
-export const client = redis.createClient({ url: getUri() })
+export const clients = {
+  pub: redis.createClient({ url: getUri() }),
+  sub: redis.createClient({ url: getUri() }),
+}
 
 function getUri() {
   let creds = config.redis.user || ''

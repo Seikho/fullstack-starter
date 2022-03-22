@@ -4,6 +4,7 @@ import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'
 import { auth } from './db/auth'
 import { config } from './env'
+import { registerSocket } from './ws/register'
 
 export const server = create({
   logging: true,
@@ -23,6 +24,8 @@ export const server = create({
     },
   },
 })
+
+server.onConnect((socket) => registerSocket(socket))
 
 const { app } = server
 

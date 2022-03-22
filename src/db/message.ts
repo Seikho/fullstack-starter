@@ -1,4 +1,4 @@
-import { client } from './redis'
+import { clients } from './redis'
 import { SocketApi } from 'src/ws/types'
 import { createLogger } from 'svcready'
 
@@ -26,7 +26,7 @@ export function subscribe(cb: MsgCallback) {
 
 export async function publish(msg: PublishOpts) {
   try {
-    await client.publish('messages', JSON.stringify(msg))
+    await clients.pub.publish('message', JSON.stringify(msg))
   } catch (err) {
     logger.error({ err }, 'Failed to write websocket message')
     // TODO: Retry logic?
@@ -34,8 +34,10 @@ export async function publish(msg: PublishOpts) {
 }
 
 export async function initiate() {
-  await client.connect()
-  client.on('message', async (channel, message) => {
+  await clients.pub.connect()
+  await clients.sub.connect()
+
+  clients.sub.subscribe('message', async (message, channel) => {
     logger.debug({ channel, message }, 'Message received')
     const payload = JSON.parse(message)
 
