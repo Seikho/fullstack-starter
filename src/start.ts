@@ -7,9 +7,12 @@ import { userCmd } from './domain/cmd/user'
 import { config } from './env'
 import { userManager } from './manager/user'
 import { server } from './server'
+import { initiate } from './db/message'
 
 export async function start() {
   await migrate()
+  await initiate()
+
   const client = await db
   setDb(client)
 

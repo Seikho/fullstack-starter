@@ -26,12 +26,3 @@ export interface UserAggregate {
   email: string
   isAdmin: boolean
 }
-
-export interface UserProfile {
-  userId: string
-  alias?: string
-  email?: string
-  isAdmin?: boolean
-}
-
-export type UserStream = 'users'

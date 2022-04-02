@@ -1,7 +1,7 @@
 import { db } from '../db/mongo'
 import { Event } from 'evtstore'
 import { createProvider } from 'evtstore/provider/mongo'
-import { tables } from 'src/db/collection'
+import { tables } from 'src/db/mongo'
 import { logger } from 'svcready'
 
 export async function getProvider<T extends Event = any>() {

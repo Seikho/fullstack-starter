@@ -37,8 +37,7 @@ export async function initiate() {
   await clients.pub.connect()
   await clients.sub.connect()
 
-  clients.sub.subscribe('message', async (message, channel) => {
-    logger.debug({ channel, message }, 'Message received')
+  clients.sub.subscribe('message', async (message, _channel) => {
     const payload = JSON.parse(message)
 
     const promises = callbacks.map((cb) => cb(payload))

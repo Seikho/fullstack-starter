@@ -3,7 +3,7 @@ import { createLogger } from 'svcready'
 import { ensureIndexes } from './indexes'
 import { migrate as migrateEvts } from 'evtstore/provider/mongo'
 import { Db } from 'mongodb'
-import { tables } from './collection'
+import { tables } from './mongo'
 import { config } from 'src/env'
 
 type EnsureFunc = (db: Db) => Promise<void>

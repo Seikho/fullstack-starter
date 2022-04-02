@@ -1,12 +1,21 @@
 import { Db, MongoClient } from 'mongodb'
 import { config } from '../env'
+import { Auth, UserProfile } from './schema'
+
+export const names = {
+  auth: 'auth',
+  userProfiles: 'userProfiles',
+}
+
+export const tables = {
+  events: () => getDb().collection<any>(config.db.events),
+  bookmarks: () => getDb().collection<any>(config.db.bookmarks),
+  userProfiles: () => getDb().collection<UserProfile>(names.userProfiles),
+  auth: () => getDb().collection<Auth>(names.auth),
+}
 
 const uri = `mongodb://${config.db.host}`
 let database: Db | null = null
-
-export const tables = {
-  userProfiles: 'userProfiles',
-}
 
 export const db = MongoClient.connect(uri, { ignoreUndefined: true }).then((client) => {
   const conn = client.db(config.db.database)

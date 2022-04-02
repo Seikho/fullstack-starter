@@ -1,27 +1,21 @@
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { getDb } from './mongo'
 import { config } from '../env'
 import { userManager } from '../manager/user'
 import { CommandError } from 'evtstore'
 import { v4 } from 'uuid'
-
-type Auth = {
-  userId: string
-  username: string
-  hash: string
-}
-const table = () => getDb().collection<Auth>('auth')
+import { tables } from './mongo'
+import { Auth } from './schema'
 
 async function createUser(username: string, password: string) {
   const userId = v4()
-  const user = await table().findOne({ username })
+  const user = await tables.auth().findOne({ username })
   if (user) {
     throw new CommandError('User already exists', 'USER_EXISTS')
   }
 
   const hash = await encrypt(password)
-  await table().insertOne({ userId, username, hash })
+  await tables.auth().insertOne({ userId, username, hash })
   await userManager.store.createUser({
     userId,
     alias: '',
@@ -32,7 +26,7 @@ async function createUser(username: string, password: string) {
 }
 
 async function getUser(username: string): Promise<Omit<Auth, '_id'> | null> {
-  const user = await table().findOne({ username: username.toLowerCase() })
+  const user = await tables.auth().findOne({ username: username.toLowerCase() })
   return user
 }
 

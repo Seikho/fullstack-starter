@@ -1,7 +1,7 @@
 import { createAggregate } from 'evtstore'
-import { UserAggregate, UserEvent, UserStream } from '../types/user'
+import { UserAggregate, UserEvent } from '../types/user'
 
-export const user = createAggregate<UserEvent, UserAggregate, UserStream>({
+export const user = createAggregate<UserEvent, UserAggregate, 'users'>({
   stream: 'users',
   create: () => ({
     state: 'new',

@@ -1,11 +1,9 @@
-import { db } from 'src/db/mongo'
-import { UserProfile } from 'src/domain/types/user'
-
-const coll = db.then((tbl) => tbl.collection<UserProfile>('userProfiles'))
+import { tables } from 'src/db/mongo'
+import { UserProfile } from 'src/db/schema'
 
 export async function getUser(userId: string) {
   const loweredId = userId.toLowerCase()
-  return coll.then((coll) => coll.findOne({ userId: loweredId }))
+  return tables.userProfiles().findOne({ userId: loweredId })
 }
 
 export async function setUser(userId: string, profile: Partial<UserProfile>) {
@@ -13,9 +11,9 @@ export async function setUser(userId: string, profile: Partial<UserProfile>) {
     throw new Error('Cannot change userId')
   }
 
-  return coll.then((coll) => coll.updateOne({ userId }, { $set: profile }))
+  return tables.userProfiles().updateOne({ userId }, { $set: profile })
 }
 
 export async function createUser(profile: UserProfile) {
-  return coll.then((coll) => coll.insertOne(profile))
+  return tables.userProfiles().insertOne(profile)
 }
