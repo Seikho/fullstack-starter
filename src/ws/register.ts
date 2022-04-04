@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import * as WebSocket from 'ws'
-import { Message, subscribe } from '../db/message'
+import { Message, subscribe } from './message'
 import { config } from '../env'
 import { AppSocket, SocketWeb } from './types'
 

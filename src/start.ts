@@ -7,7 +7,7 @@ import { userCmd } from './domain/cmd/user'
 import { config } from './env'
 import { userManager } from './manager/user'
 import { server } from './server'
-import { initiate } from './db/message'
+import { initiate } from './ws/message'
 
 export async function start() {
   await migrate()
