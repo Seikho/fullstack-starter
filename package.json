@@ -2,6 +2,7 @@
   "name": "fullstack-starter",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clear": "rimraf build",
@@ -12,6 +13,7 @@
     "// Backend scripts": "",
     "srv:build": "yarn tsc",
     "srv:watch": "yarn tsc -w",
+    "presrv:start": "yarn srv:build",
     "srv:start": "nodemon --watch build -e js build/index.js",
     "// Frontend scripts": "",
     "web:serve": "parcel index.html",

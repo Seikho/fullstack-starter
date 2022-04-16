@@ -1,12 +1,16 @@
+import * as fs from 'fs'
 import * as dotenv from 'dotenv'
+import { v4 } from 'uuid'
+
+if (!process.env.JWT_SECRET) getSecretFromFile()
 
 dotenv.config()
 
 export const config = {
   appEnv: getEnv('APP_ENV', 'dev'),
   logLevel: getEnv('LOG_LEVEL', 'info'),
-  baseUrl: getEnv('BASE_URL', 'http://localhost:3000'),
-  port: Number(getEnv('PORT', '3000')),
+  baseUrl: getEnv('BASE_URL', 'http://localhost:3001'),
+  port: Number(getEnv('PORT', '3001')),
   auth: {
     facebook: getEnv('FACEBOOK', ''),
     google: getEnv('GOOGLE', ''),
@@ -25,7 +29,7 @@ export const config = {
     user: getEnv('REDIS_USER', ''),
     password: getEnv('REDIS_PASSWORD', ''),
   },
-  jwtSecret: getEnv('JWT_SECRET'),
+  jwtSecret: getEnv('JWT_SECRET', 'exam'),
   jwtExpiry: Number(getEnv('JWT_EXPIRY', '24')),
   mail: {
     enabled: !!process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY,
@@ -41,4 +45,17 @@ function getEnv(key: string, fallback?: string): string {
   const value = process.env[key] ?? fallback
   if (value === undefined) throw new Error(`Missing environment variable: "${key}"`)
   return value
+}
+
+function getSecretFromFile() {
+  const file = '.secret'
+  try {
+    fs.statSync(file)
+    const secret = fs.readFileSync(file)
+    process.env.JWT_SECRET = secret.toString()
+  } catch (ex) {
+    const secret = v4()
+    fs.writeFileSync(file, secret)
+    process.env.JWT_SECRET = secret
+  }
 }
