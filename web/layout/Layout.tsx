@@ -1,6 +1,6 @@
 import './layout.scss'
 import * as React from 'react'
-import { withState } from '/web/store'
+import { withState } from '../state'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { Toasts } from './Toast'

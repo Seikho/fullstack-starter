@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { withState } from '/web/store'
-import { Toast } from '/web/store/toast'
+import { withState } from '../state'
+import { Toast } from '../state/toast'
 
 export const Toasts: React.FC = withState(
   ({ toast }) => ({ toasts: toast.toasts }),

@@ -1,5 +1,5 @@
 import { saga } from '../store'
-import { hydrateToken } from '../user'
+import { hydrateToken } from '.'
 import { api } from '../api'
 
 saga('APP_INIT', (_, dispatch) => {

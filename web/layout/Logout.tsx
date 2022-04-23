@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { withDispatch } from '/web/store/store'
+import { withDispatch } from '../state/store'
 
 export const Logout: React.FC = withDispatch(({ dispatch }) => {
   React.useEffect(() => {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { withState } from '/web/store'
+import { withState } from '../state'
 
 export const Header = withState(
   ({ user: { loggedIn } }) => ({ loggedIn }),

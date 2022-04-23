@@ -1,4 +1,4 @@
-import { store } from '../store'
+import { store } from '.'
 import { config } from './config'
 
 const baseUrl = config.apiUrl

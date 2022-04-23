@@ -11,7 +11,9 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/src/index.ts",
       "outFiles": ["${workspaceFolder}/build/**/*.js"],
-      "outputCapture": "std"
+      "outputCapture": "std",
+      "console": "integratedTerminal",
+      "sourceMaps": true
     }
   ]
 }

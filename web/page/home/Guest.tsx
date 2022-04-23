@@ -1,6 +1,6 @@
 import './guest.scss'
 import * as React from 'react'
-import { withDispatch } from '/web/store'
+import { withDispatch } from '../../state'
 
 export const Guest = withDispatch(({ dispatch }) => {
   const signin = (user: string, pass: string) => {

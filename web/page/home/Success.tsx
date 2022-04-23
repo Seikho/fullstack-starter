@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Redirect } from 'react-router-dom'
-import { withState } from '/web/store'
+import { withState } from '../../state'
 
 export const Success: React.FC<{}> = withState(
   () => ({}),

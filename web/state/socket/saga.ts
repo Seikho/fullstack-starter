@@ -1,5 +1,5 @@
 import { saga, store } from '../store'
-import { Socket } from '../socket'
+import { Socket } from '.'
 import { config } from '../config'
 
 const BASE_RETRY = 250

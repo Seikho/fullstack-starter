@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "es2019",
     "module": "commonjs",
@@ -11,11 +12,10 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "noEmit": true,
+    "noEmit": false,
     "paths": {
-      "src/*": ["src/*"],
-      "/web/*": ["web/*"]
+      "src/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "web/**/*.ts", "web/**/*.tsx"]
+  "include": ["src/**/*.ts"]
 }

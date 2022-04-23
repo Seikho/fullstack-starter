@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { withState } from '../../store'
+import { withState } from '../../state'
 import { Guest } from './Guest'
 
 export const Home = withState(

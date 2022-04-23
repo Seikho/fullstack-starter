@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { withState } from '/web/store'
+import { withState } from '../state'
 
 export const Sidebar = withState(
   ({ user }) => ({ menu: user.menu, loggedIn: user.loggedIn }),
