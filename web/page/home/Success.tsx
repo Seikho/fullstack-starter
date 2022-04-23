@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { withState } from '../../state'
 
 export const Success: React.FC<{}> = withState(
@@ -10,7 +10,7 @@ export const Success: React.FC<{}> = withState(
       dispatch({ type: 'USER_RECEIVE_LOGIN', token: search.accessToken })
     }
 
-    return <Redirect to="/" />
+    return <Navigate to="/" />
   }
 )
 

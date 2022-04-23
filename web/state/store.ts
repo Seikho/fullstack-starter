@@ -1,4 +1,4 @@
-import { createStore } from 'typedstate'
+import { createStore } from './create'
 import * as user from './user'
 import * as toast from './toast'
 import * as socket from './socket'

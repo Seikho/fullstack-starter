@@ -1,4 +1,4 @@
-import { createReducer } from 'typedstate'
+import { createReducer } from '../create'
 import { SocketApi, SocketWeb } from 'src/ws/types'
 
 export { reducer, Socket }

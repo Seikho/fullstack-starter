@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken'
-import { createReducer } from 'typedstate'
+import { createReducer } from '../create'
 
 export { reducer }
 

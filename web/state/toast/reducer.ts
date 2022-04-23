@@ -1,4 +1,4 @@
-import { createReducer } from 'typedstate'
+import { createReducer } from '../create'
 
 export { reducer }
 
