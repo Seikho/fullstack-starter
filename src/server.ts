@@ -1,4 +1,4 @@
-import * as cors from 'cors'
+import cors from 'cors'
 import { create, logger } from 'svcready'
 import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'

@@ -1,6 +1,6 @@
 import './google'
 import './facebook'
-import * as passport from 'passport'
+import passport from 'passport'
 import { Router } from 'express'
 import { callback } from './callback'
 import { logger } from 'svcready'
@@ -29,14 +29,6 @@ if (facebook) router.get('/facebook', facebook)
 
 router.post('/login', manual)
 
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login-failed' }),
-  callback
-)
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login-failed' }), callback)
 
-router.get(
-  '/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login-failed' }),
-  callback
-)
+router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login-failed' }), callback)
