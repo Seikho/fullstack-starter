@@ -35,12 +35,12 @@ button {
   }
 
   &.success {
-    background-color: var(--color-unlocked);
+    background-color: var(--color-success);
   }
 
   &.danger,
   &.error {
-    background-color: var(--color-locked);
+    background-color: var(--color-error);
     &:hover {
       opacity: 0.9;
     }
@@ -68,5 +68,9 @@ a {
 
   &.large {
     height: 40px;
+  }
+  
+  &.disabled {
+    opacity: 0.5;
   }
 }
