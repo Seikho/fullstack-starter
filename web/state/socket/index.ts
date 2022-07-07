@@ -74,7 +74,7 @@ const persistentListeners = new Map<number, any>()
 
 function createSocket(dispatch: Dispatcher<SocketState, SocketAction>) {
   const base = config.apiUrl.replace('http://', 'ws://').replace('https://', 'wss://')
-  const ws = new WebSocket(base + '/') as Socket
+  const ws = new WebSocket(base + '/ws') as Socket
   ws.connected = false
   let waitingPong = false
 

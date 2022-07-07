@@ -1,35 +1,39 @@
+import session from 'express-session'
 import cors from 'cors'
 import { create, logger } from 'svcready'
 import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'
-import { auth } from './db/auth'
 import { config } from './env'
 import { registerSocket } from './ws/register'
+import { setup } from './socket'
 
 export const server = create({
   logging: true,
-  sockets: true,
   port: config.port,
-  auth: {
-    trustProxy: true,
-    secret: config.jwtSecret,
-    cookie: {
-      secure: false,
-      sameSite: 'strict',
-    },
-    getUser: async (id) => {
-      const user = await auth.getUser(id)
-      if (!user) return
-      return { userId: user.userId, hash: user.hash }
-    },
-  },
 })
 
 server.onConnect((socket) => registerSocket(socket))
 
 const { app } = server
 
+setup()
+
 app.use(cors())
+app.set('trust proxy', 1)
+app.use(
+  session({
+    proxy: true,
+    secret: config.jwtSecret,
+    cookie: {
+      httpOnly: true,
+      maxAge: 10000 * 60 * 1000,
+      sameSite: 'strict',
+      secure: false,
+    },
+    resave: false,
+    saveUninitialized: true,
+  })
+)
 app.use(sessionMiddleware)
 app.use('/api', api)
 

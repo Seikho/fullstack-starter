@@ -12,9 +12,7 @@ type InitAction = { type: '__INIT' }
 type BaseAction<T extends { type: string }> = T | InitAction
 
 const win: any = window
-const devTools = win.__REDUX_DEVTOOLS_EXTENSION__.connect?.() || { send: () => {} }
-
-console.log(devTools)
+const devTools = win.__REDUX_DEVTOOLS_EXTENSION__?.connect?.() || { send: () => {} }
 
 export function createStore<State, Action extends { type: string }>(
   name: string,

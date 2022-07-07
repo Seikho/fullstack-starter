@@ -10,7 +10,7 @@
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/src/index.ts",
-      "outFiles": ["${workspaceFolder}/build/**/*.js"],
+      "outFiles": ["${workspaceFolder}/build/src/**/*.js"],
       "outputCapture": "std",
       "console": "integratedTerminal",
       "sourceMaps": true

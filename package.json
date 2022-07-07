@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "_moduleAliases": {
-    "src": "build/"
+    "src": "build/src"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.3.2",
@@ -59,12 +59,14 @@
     "util": "^0.12.4"
   },
   "dependencies": {
+    "@types/express-session": "^1.17.4",
     "@types/react-router": "^5.1.18",
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "evtstore": "^11.3.1",
+    "evtstore": "^11.4.2",
+    "express-session": "^1.17.3",
     "frisker": "^1.4.4",
     "history": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
@@ -83,7 +85,7 @@
     "redux-devtools-extension": "^2.13.9",
     "svcready": "^4.0.0",
     "uuid": "^8.3.2",
-    "ws": "^7.4.4",
+    "ws": "^8.8.0",
     "zustand": "^4.0.0-rc.1"
   },
   "resolutions": {
