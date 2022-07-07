@@ -1,21 +1,20 @@
 import * as React from 'react'
-import { withState } from '../state'
+import { stores } from '../state'
 import { Toast } from '../state/toast'
 
-export const Toasts: React.FC = withState(
-  ({ toast }) => ({ toasts: toast.toasts }),
-  ({ toasts }) => {
-    return (
-      <div>
-        <div className="toast">
-          {toasts.map((toast, i) => (
-            <Item key={i} title={toast.title} message={toast.message} type={toast.type} />
-          ))}
-        </div>
+export const Toasts: React.FC = () => {
+  const toasts = stores.toast((store) => store.toasts)
+
+  return (
+    <div>
+      <div className="toast">
+        {toasts.map((toast, i) => (
+          <Item key={i} title={toast.title} message={toast.message} type={toast.type} />
+        ))}
       </div>
-    )
-  }
-)
+    </div>
+  )
+}
 
 const Item = ({ title, message, type }: Toast) => {
   return (

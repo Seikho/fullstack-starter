@@ -1,5 +1,5 @@
-import { store } from '.'
 import { config } from './config'
+import { hydrateToken } from './util'
 
 const baseUrl = config.apiUrl
 
@@ -41,7 +41,7 @@ async function callApi<T = any>(
     }
 
     if (path.endsWith('/renew')) {
-      store.dispatch({ type: 'USER_REQUEST_LOGOUT' })
+      // store.dispatch({ type: 'USER_REQUEST_LOGOUT' })
       throw new StatusError('Unauthorized', 401)
     }
 
@@ -57,7 +57,7 @@ async function callApi<T = any>(
       return { result: undefined, status: 401, error: 'Not authorized' }
     }
 
-    store.dispatch({ type: 'USER_RECEIVE_LOGIN', token: result })
+    // store.dispatch({ type: 'USER_RECEIVE_LOGIN', token: result })
     return callApi(path, opts)
   }
 
@@ -80,22 +80,22 @@ function headers() {
     'Content-Type': 'application/json',
   }
 
-  const { user } = store.getState()
-  if (!user.token) return { headers }
+  const token = hydrateToken()
+  if (!token) return { headers }
 
-  headers.Authorization = `Bearer ${user.token}`
+  headers.Authorization = `Bearer ${token}`
   return { headers }
 }
 
-setInterval(async () => {
-  const { user } = store.getState()
-  if (user.token) {
-    const { result } = await callApi<string | false>('/user/renew', {
-      method: 'post',
-    })
+// setInterval(async () => {
+//   const { user } = store.getState()
+//   if (user.token) {
+//     const { result } = await callApi<string | false>('/user/renew', {
+//       method: 'post',
+//     })
 
-    if (result !== false) {
-      store.dispatch({ type: 'USER_RECEIVE_LOGIN', token: result })
-    }
-  }
-}, 1800000)
+//     if (result !== false) {
+//       store.dispatch({ type: 'USER_RECEIVE_LOGIN', token: result })
+//     }
+//   }
+// }, 1800000)

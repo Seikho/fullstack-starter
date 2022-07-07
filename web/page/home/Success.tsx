@@ -1,18 +1,16 @@
 import * as React from 'react'
 import { Navigate } from 'react-router-dom'
-import { withState } from '../../state'
+import { stores } from '../../state'
 
-export const Success: React.FC<{}> = withState(
-  () => ({}),
-  ({ dispatch }) => {
-    const search = parseSearch()
-    if (search.accessToken) {
-      dispatch({ type: 'USER_RECEIVE_LOGIN', token: search.accessToken })
-    }
-
-    return <Navigate to="/" />
+export const Success: React.FC = () => {
+  const dispatch = stores.user((store) => store.dispatch)
+  const search = parseSearch()
+  if (search.accessToken) {
+    dispatch({ type: 'RECEIVE_LOGIN', token: search.accessToken })
   }
-)
+
+  return <Navigate to="/" />
+}
 
 function parseSearch() {
   const search = location.search

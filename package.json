@@ -43,11 +43,9 @@
     "@types/passport": "^1.0.7",
     "@types/passport-facebook": "^2.1.11",
     "@types/passport-google-oauth20": "^2.0.9",
-    "@types/react": "^18.0.6",
-    "@types/react-dom": "^18.0.2",
-    "@types/react-redux": "^7.1.24",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
-    "@types/redux": "^3.6.0",
     "@types/ws": "^7.4.0",
     "concurrently": "^7.0.0",
     "crypto-browserify": "^3.12.0",
@@ -57,7 +55,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.32.8",
     "stream-browserify": "^3.0.0",
-    "typescript": "^4.6.2",
+    "typescript": "^4.7.4",
     "util": "^0.12.4"
   },
   "dependencies": {
@@ -77,17 +75,16 @@
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-redux": "^8.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "redis": "^4.0.4",
-    "redux": "^4.1.1",
     "redux-devtools-extension": "^2.13.9",
     "svcready": "^4.0.0",
     "uuid": "^8.3.2",
-    "ws": "^7.4.4"
+    "ws": "^7.4.4",
+    "zustand": "^4.0.0-rc.1"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

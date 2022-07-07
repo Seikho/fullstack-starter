@@ -1,13 +1,14 @@
 import './guest.scss'
 import * as React from 'react'
-import { withDispatch } from '../../state'
+import { stores } from '../../state'
 
-export const Guest = withDispatch(({ dispatch }) => {
+export const Guest: React.FC = () => {
+  const dispatch = stores.user((store) => store.dispatch)
   const signin = (user: string, pass: string) => {
-    dispatch({ type: 'USER_REQUEST_LOGIN', username: user, password: pass })
+    dispatch({ type: 'REQUEST_LOGIN', username: user, password: pass })
   }
   const signup = (user: string, pass: string) => {
-    dispatch({ type: 'USER_REQUEST_REGISTER', username: user, password: pass, confirm: pass })
+    dispatch({ type: 'REQUEST_REGISTER', username: user, password: pass, confirm: pass })
   }
 
   const [view, setView] = React.useState<'login' | 'register' | 'social'>('login')
@@ -37,7 +38,7 @@ export const Guest = withDispatch(({ dispatch }) => {
       </div>
     </div>
   )
-})
+}
 
 const Social = () => (
   <div className="pad column center biggaps">

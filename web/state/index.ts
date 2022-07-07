@@ -1,6 +1,9 @@
-import { store, withState, withDispatch } from './store'
-import './saga'
+import * as user from './user'
+import * as toast from './toast'
+import * as socket from './socket'
 
-// store.dispatch({ type: 'APP_INIT' })
-
-export { store, withState, withDispatch }
+export const stores = {
+  user: user.userStore,
+  toast: toast.toastStore,
+  socket: socket.socketStore,
+}

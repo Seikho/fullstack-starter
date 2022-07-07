@@ -1,30 +1,28 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { withState } from '../state'
+import { stores } from '../state'
 
-export const Sidebar = withState(
-  ({ user }) => ({ menu: user.menu, loggedIn: user.loggedIn }),
-  ({ menu, loggedIn, dispatch }) => {
-    if (!loggedIn) return null
-    const mod = menu ? 'expand' : ''
+export const Sidebar: React.FC = () => {
+  const user = stores.user()
+  if (!user.loggedIn) return null
+  const mod = user.menu ? 'expand' : ''
 
-    const toggleMenu = () => dispatch({ type: 'USER_TOGGLE_MENU' })
+  const toggleMenu = () => user.dispatch({ type: 'TOGGLE_MENU' })
 
-    return (
-      <div className={`layout__sidebar ${mod}`}>
-        <div className={`layout__menu ${mod}`}>
-          <Link className="layout__link" to="/">
-            Home
-          </Link>
-          <Link className="layout__link" to="/profile">
-            Profile
-          </Link>
-          <Link className="layout__link" to="/logout">
-            Logout
-          </Link>
-        </div>
-        <div className={`layout__overlay ${mod} hide-desktop`} onClick={toggleMenu}></div>
+  return (
+    <div className={`layout__sidebar ${mod}`}>
+      <div className={`layout__menu ${mod}`}>
+        <Link className="layout__link" to="/">
+          Home
+        </Link>
+        <Link className="layout__link" to="/profile">
+          Profile
+        </Link>
+        <Link className="layout__link" to="/logout">
+          Logout
+        </Link>
       </div>
-    )
-  }
-)
+      <div className={`layout__overlay ${mod} hide-desktop`} onClick={toggleMenu}></div>
+    </div>
+  )
+}
