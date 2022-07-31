@@ -3,6 +3,7 @@ import { createStore } from '../create'
 import { getParsedToken, parseToken } from '../util'
 
 type UserState = {
+  loginLoading: boolean
   alias?: string
   email?: string
   token?: string
@@ -39,27 +40,27 @@ const tokenValid = token ? token.exp > now : false
 export const userStore = createStore<UserState, UserAction>(
   'user',
   {
+    loginLoading: false,
     loggedIn: tokenValid,
     userId: token?.sub ?? '',
     isAdmin: false,
     menu: false,
   },
   {
-    REQUEST_LOGIN: async (_, { username, password }, dispatch) => {
+    REQUEST_LOGIN: async function* (_, { username, password }, dispatch) {
+      yield { loginLoading: true }
       const { result, error } = await api.post('/auth/login', { username, password })
-      if (error) return { loginError: error }
-
-      const payload = parseToken(result.token)
-      if (payload.type !== 'webapp') return {}
+      if (error) return { loginLoading: false, loginError: error }
 
       dispatch({ type: 'RECEIVE_LOGIN', token: result.token })
     },
     RECEIVE_LOGIN: (_, { token }) => {
       const payload = parseToken(token)
-      if (payload.type !== 'webapp') return {}
+      if (payload.type !== 'webapp') return { loginLoading: false }
 
       return {
         token,
+        loginLoading: false,
         loggedIn: true,
         alias: payload.alias,
         userId: payload.sub,

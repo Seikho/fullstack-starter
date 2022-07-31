@@ -65,7 +65,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "evtstore": "^11.4.2",
+    "evtstore": "^11.5.1",
     "express-session": "^1.17.3",
     "frisker": "^1.4.4",
     "history": "^5.0.0",
