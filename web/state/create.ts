@@ -1,6 +1,12 @@
 import create from 'zustand'
 
-type ReducerReturn<S> = Promise<Partial<S> | void> | Partial<S> | void | AsyncIterator<Partial<S> | void>
+type ReducerReturn<S> =
+  | Promise<Partial<S> | void>
+  | Partial<S>
+  | void
+  | AsyncIterator<Partial<S> | void>
+  | Iterator<Partial<S> | void>
+
 export type Dispatcher<S, A extends { type: string }> = (action: A) => ReducerReturn<S>
 
 type ReducerBody<S, A extends { type: string }> = {
@@ -44,7 +50,7 @@ export function createStore<State, Action extends { type: string }>(
       return
     }
 
-    if (isAsyncGenerator<State>(result)) {
+    if (isGenerator<State>(result)) {
       let next = { ...state }
       for await (const nextState of result) {
         if (!nextState) continue
@@ -83,7 +89,7 @@ function isPromise<S>(value: any): value is Promise<Partial<S> | void> {
   return 'then' in value && typeof value.then === 'function'
 }
 
-function isAsyncGenerator<S>(value: any): value is AsyncGenerator<Partial<S> | void> {
+function isGenerator<S>(value: any): value is AsyncGenerator<Partial<S> | void> | Generator<Partial<S>> {
   if (!value) return false
   return 'next' in value && typeof value.next === 'function'
 }

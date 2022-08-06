@@ -2885,10 +2885,10 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-evtstore@^11.5.1:
-  version "11.5.1"
-  resolved "https://registry.yarnpkg.com/evtstore/-/evtstore-11.5.1.tgz#d32ee6e064586c3440db116d4b6a4fcaefa7199c"
-  integrity sha512-TrHpi2YmRxTMQVFLZi9IzWkGsF9zmsfa5MYDEuRXrhgJvIkzSa/7Yty/KAXPe6bwID9HfJ4Ck1IWIqsDbs2EQw==
+evtstore@^11.8.3:
+  version "11.8.3"
+  resolved "https://registry.yarnpkg.com/evtstore/-/evtstore-11.8.3.tgz#befe941c621c8eb4711cb03ca9378e49669d36c2"
+  integrity sha512-9RVOQiNZCTiRbqaoXvkeEY4Bhz4eyFvcF2jiblIaAKTVT7PwfqpI4iWtDDjTx8vbO14VGG7loDdW+W8VcAJI5A==
 
 express-session@^1.17.2:
   version "1.17.2"
