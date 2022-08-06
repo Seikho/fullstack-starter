@@ -1,4 +1,4 @@
-import create from 'zustand'
+import create, { UseBoundStore } from 'zustand'
 
 type ReducerReturn<S> =
   | Promise<Partial<S> | void>
@@ -6,7 +6,6 @@ type ReducerReturn<S> =
   | void
   | AsyncIterator<Partial<S> | void>
   | Iterator<Partial<S> | void>
-
 export type Dispatcher<S, A extends { type: string }> = (action: A) => ReducerReturn<S>
 
 type ReducerBody<S, A extends { type: string }> = {
@@ -22,13 +21,27 @@ type Setter<S> = (state: S) => void
 const win: any = window
 const devTools = win.__REDUX_DEVTOOLS_EXTENSION__?.connect?.() || { send: () => {} }
 
+const stores: { [name: string]: UseBoundStore<any> } = {}
+
+function send(name: string, action: any, state: any) {
+  if (action.type === '__INIT') return
+  let next: any = {}
+
+  for (const [name, store] of Object.entries(stores)) {
+    next[name] = store.getState()
+  }
+
+  next[name] = state
+  devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+}
+
 export function createStore<State, Action extends { type: string }>(
   name: string,
   init: State,
   handlers: ReducerBody<State, BaseAction<Action>>
 ) {
   const reducer = async (
-    state: State,
+    state: State = init,
     action: Action | InitAction,
     dispatch: Dispatcher<State, BaseAction<Action>>,
     setter: Setter<State>
@@ -37,7 +50,10 @@ export function createStore<State, Action extends { type: string }>(
 
     const type = action.type as BaseAction<Action>['type']
     const handler = handlers[type]
-    if (!handler) return state
+    if (!handler) {
+      send(name, action, state)
+      return
+    }
 
     const result = handler(state, action as any, dispatch)
     if (!result) return state
@@ -45,7 +61,7 @@ export function createStore<State, Action extends { type: string }>(
     if (isPromise<State>(result)) {
       const nextState = await result
       const next = { ...state, ...nextState }
-      devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+      send(name, action, next)
       setter(next)
       return
     }
@@ -55,21 +71,22 @@ export function createStore<State, Action extends { type: string }>(
       for await (const nextState of result) {
         if (!nextState) continue
         next = { ...next, ...nextState }
-        devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+        send(name, action, next)
         setter(next)
       }
+
       return
     }
 
     const next = { ...state, ...result }
-    devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+    send(name, action, next)
     setter(next)
   }
 
   const store = create<State & { dispatch: Dispatcher<State, Action> }>((set, get) => {
     const dispatch = async (action: BaseAction<Action>) => {
       const next = await reducer(get(), action, dispatch, set)
-      if (action) devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+      if (action) send(name, action, next)
       return next
     }
 
@@ -81,7 +98,14 @@ export function createStore<State, Action extends { type: string }>(
     }
   })
 
-  return store
+  type PatchedStore = typeof store & { dispatch: Dispatcher<State, Action> }
+
+  const patchedStore = store as PatchedStore
+  patchedStore.dispatch = store.getState().dispatch
+  stores[name] = store
+
+  send(name, { type: 'INIT' }, init)
+  return patchedStore
 }
 
 function isPromise<S>(value: any): value is Promise<Partial<S> | void> {
