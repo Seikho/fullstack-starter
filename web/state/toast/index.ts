@@ -44,3 +44,7 @@ export const toastStore = createStore<ToastState, ToastAction>(
     },
   }
 )
+
+export function toast(kind: Toast['type'], message: string, title?: string) {
+  toastStore.getState().dispatch({ type: 'ADD', kind, message, title })
+}
