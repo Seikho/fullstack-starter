@@ -72,7 +72,7 @@ export const socketStore = createStore<SocketState, SocketAction>(
 
 const persistentListeners = new Map<number, any>()
 
-function createSocket(dispatch: Dispatcher<SocketState, SocketAction>) {
+function createSocket(dispatch: Dispatcher<SocketAction>) {
   const base = config.apiUrl.replace('http://', 'ws://').replace('https://', 'wss://')
   const ws = new WebSocket(base + '/ws') as Socket
   ws.connected = false
