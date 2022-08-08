@@ -53,7 +53,7 @@ export const socketStore = createStore<SocketState, SocketAction>(
       if (!socket.connected) return
       if (authed) return
 
-      dispatch({ type: 'SEND', payload: { type: 'login', payload: { token } } })
+      dispatch({ type: 'SEND', payload: { type: 'login', token } })
     },
     SEND: ({ socket }, action) => {
       if (!socket) return
@@ -61,9 +61,9 @@ export const socketStore = createStore<SocketState, SocketAction>(
     },
     RECEIVE: (_, { data: payload }) => {
       switch (payload.type) {
-        case 'login':
+        case 'auth':
           return {
-            authed: payload.payload.success,
+            authed: payload.success,
           }
       }
     },

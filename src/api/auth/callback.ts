@@ -1,4 +1,4 @@
-import { handle, StatusError } from 'svcready'
+import { handle, StatusError } from 'src/api/handle'
 import { auth } from 'src/db/auth'
 import { userCmd } from 'src/domain/cmd/user'
 

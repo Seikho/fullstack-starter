@@ -1,6 +1,6 @@
 import { clients } from '../db/redis'
 import { SocketApi } from 'src/ws/types'
-import { createLogger } from 'svcready'
+import { createLogger } from 'src/logger'
 
 const logger = createLogger('sockets')
 

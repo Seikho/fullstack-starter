@@ -1,5 +1,5 @@
 import { userCmd } from 'src/domain/cmd/user'
-import { handle, StatusError } from 'svcready'
+import { handle, StatusError } from 'src/api/handle'
 
 type Body = {
   alias?: string

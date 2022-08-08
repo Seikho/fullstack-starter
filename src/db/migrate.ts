@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { createLogger } from 'svcready'
+import { createLogger } from 'src/logger'
 import { ensureIndexes } from './indexes'
 import { migrate as migrateEvts } from 'evtstore/provider/mongo'
 import { Db } from 'mongodb'

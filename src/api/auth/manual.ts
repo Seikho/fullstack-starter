@@ -1,6 +1,6 @@
 import { assertValid } from 'frisker'
 import { auth } from 'src/db/auth'
-import { handle, StatusError } from 'svcready'
+import { handle, StatusError } from 'src/api/handle'
 
 const Body = {
   username: 'string',

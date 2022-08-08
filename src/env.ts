@@ -1,10 +1,7 @@
 import * as fs from 'fs'
-import * as dotenv from 'dotenv'
 import { v4 } from 'uuid'
 
 if (!process.env.JWT_SECRET) getSecretFromFile()
-
-dotenv.config()
 
 export const config = {
   appEnv: getEnv('APP_ENV', 'dev'),

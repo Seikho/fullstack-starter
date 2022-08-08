@@ -1,22 +1,17 @@
+import * as http from 'http'
+import express from 'express'
 import session from 'express-session'
 import cors from 'cors'
-import { create, logger } from 'svcready'
+import { logger } from 'src/logger'
 import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'
 import { config } from './env'
-import { registerSocket } from './ws/register'
-import { setup } from './socket'
+import { setupSocketServer } from './ws/setup-server'
 
-export const server = create({
-  logging: true,
-  port: config.port,
-})
+const app = express()
+export const server = new http.Server(app)
 
-server.onConnect((socket) => registerSocket(socket))
-
-const { app } = server
-
-setup()
+setupSocketServer(server)
 
 app.use(cors())
 app.set('trust proxy', 1)
@@ -38,6 +33,6 @@ app.use(sessionMiddleware)
 app.use('/api', api)
 
 process.on('SIGTERM', () => {
-  server.stop()
+  server.close()
   logger.info(`Server stopped. App received SIGTERM`)
 })

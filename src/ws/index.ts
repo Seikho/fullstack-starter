@@ -1,6 +1,6 @@
 import * as http from 'http'
 import * as WebSocket from 'ws'
-import { registerSocket } from './register'
+import { onSocketMessage } from './on-message'
 
 const PING_INTERVAL = 30000
 
@@ -19,7 +19,7 @@ export function setupWebsocketServer(server: http.Server) {
   }, PING_INTERVAL)
 
   wss.on('connection', (ws: any) => {
-    registerSocket(ws)
+    onSocketMessage(ws)
 
     ws.isAlive = true
     ws.on('pong', () => heartbeat(ws))

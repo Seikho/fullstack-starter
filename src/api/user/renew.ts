@@ -1,4 +1,4 @@
-import { handle, StatusError } from 'svcready'
+import { handle, StatusError } from 'src/api/handle'
 import { auth } from '../../db/auth'
 
 export const renew = handle(async (req, res) => {

@@ -1,5 +1,5 @@
 require('module-alias/register')
-import { logger } from 'svcready'
+import { logger } from 'src/logger'
 import { auth } from './db/auth'
 import { db, setDb } from './db/mongo'
 import { migrate } from './db/migrate'
@@ -17,7 +17,9 @@ export async function start() {
   setDb(client)
 
   userManager.handler.start()
-  server.start()
+  server.listen(config.port, () => {
+    logger.info(`Server listening on port ${config.port}`)
+  })
 
   const user = await auth.getUser(config.init.user)
   if (!user) {
