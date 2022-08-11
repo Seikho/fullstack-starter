@@ -5,6 +5,6 @@ import { User } from './User'
 
 export const Home: React.FC = () => {
   const loggedIn = stores.user((store) => store.loggedIn)
-  const Body = loggedIn ? User : Guest
-  return <Body />
+  if (loggedIn) return <User />
+  return <Guest />
 }

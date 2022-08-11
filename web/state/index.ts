@@ -1,9 +1,11 @@
-import * as user from './user'
-import * as toast from './toast'
-import * as socket from './socket'
+import { socketStore } from './socket'
+import { userStore } from './user'
+import { toastStore } from './toast'
 
 export const stores = {
-  user: user.userStore,
-  toast: toast.toastStore,
-  socket: socket.socketStore,
+  user: userStore,
+  toast: toastStore,
+  socket: socketStore,
 }
+
+export { socketStore, userStore, toastStore }

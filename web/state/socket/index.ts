@@ -84,6 +84,7 @@ function createSocket(dispatch: Dispatcher<SocketAction>) {
     dispatch({ type: 'UPDATE', connected: true })
 
     const ping = () => {
+      if (!ws.connected) return
       ws.send(JSON.stringify({ type: 'ping' }))
 
       setTimeout(() => {

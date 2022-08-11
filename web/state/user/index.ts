@@ -1,6 +1,6 @@
 import { api } from '../api'
 import { createStore } from '../create'
-import { getParsedToken, parseToken } from '../util'
+import { getParsedToken, parseToken, clearToken } from '../util'
 
 type UserState = {
   loginLoading: boolean
@@ -79,12 +79,15 @@ export const userStore = createStore<UserState, UserAction>(
       dispatch({ type: 'RECEIVE_LOGIN', token: result })
     },
     TOGGLE_MENU: ({ menu }) => ({ menu: !menu }),
-    REQUEST_LOGOUT: () => ({
-      loggedIn: false,
-      token: undefined,
-      userId: undefined,
-      email: undefined,
-      alias: undefined,
-    }),
+    REQUEST_LOGOUT: () => {
+      clearToken()
+      return {
+        loggedIn: false,
+        token: undefined,
+        userId: undefined,
+        email: undefined,
+        alias: undefined,
+      }
+    },
   }
 )

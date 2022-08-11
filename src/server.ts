@@ -2,7 +2,7 @@ import * as http from 'http'
 import express from 'express'
 import session from 'express-session'
 import cors from 'cors'
-import { logger } from 'src/logger'
+import { logger, logMiddleware } from 'src/logger'
 import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'
 import { config } from './env'
@@ -13,6 +13,8 @@ export const server = new http.Server(app)
 
 setupSocketServer(server)
 
+app.use(express.json() as any, express.urlencoded({ extended: true }) as any)
+app.use(logMiddleware())
 app.use(cors())
 app.set('trust proxy', 1)
 app.use(

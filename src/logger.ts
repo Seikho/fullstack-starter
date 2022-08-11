@@ -37,7 +37,7 @@ function parentLogger(name: string) {
 }
 
 export function logMiddleware() {
-  const toRedact = new Set<string>()
+  const toRedact = new Set<string>(['password', 'token'])
   const middleware = (req: any, res: Response, next: NextFunction) => {
     const body: any = { ...req.body }
 

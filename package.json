@@ -18,7 +18,7 @@
     "presrv:start": "yarn srv:build",
     "srv:start": "nodemon --watch build -e js build/index.js",
     "// Frontend scripts": "",
-    "web:serve": "parcel index.html",
+    "web:serve": "parcel index.html -p 4000",
     "web:build": "parcel build index.html",
     "// Database scripts": "",
     "up": "docker-compose up -d",
@@ -32,7 +32,7 @@
     "src": "build/src"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.3.2",
+    "@parcel/transformer-sass": "^2.7.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
@@ -55,7 +55,7 @@
     "nodemon": "^2.0.15",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
-    "sass": "^1.32.8",
+    "sass": "^1.54.4",
     "stream-browserify": "^3.0.0",
     "typescript": "^4.7.4",
     "util": "^0.12.4"
@@ -76,11 +76,12 @@
     "migrate-mongo": "^8.2.2",
     "module-alias": "^2.2.2",
     "mongodb": "^4.4.1",
-    "parcel": "^2.3.2",
+    "parcel": "^2.7.0",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "pino": "^8.4.0",
+    "pino-pretty": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
@@ -89,7 +90,7 @@
     "redux-devtools-extension": "^2.13.9",
     "uuid": "^8.3.2",
     "ws": "^8.8.0",
-    "zustand": "^4.0.0-rc.1"
+    "zustand": "^4.0.0"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

@@ -20,3 +20,7 @@ export function getParsedToken() {
   const payload = jwt.decode(token) as AuthToken
   return payload
 }
+
+export function clearToken() {
+  localStorage.removeItem(TOKEN_KEY)
+}
