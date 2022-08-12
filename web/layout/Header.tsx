@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { stores } from '../state'
+import { userStore } from '../state'
 
 export const Header: React.FC = () => {
-  const { loggedIn, dispatch } = stores.user(({ loggedIn, dispatch }) => ({ loggedIn, dispatch }))
+  const { loggedIn, dispatch } = userStore(({ loggedIn, dispatch }) => ({ loggedIn, dispatch }))
   const toggleMenu = () => {
     dispatch({ type: 'TOGGLE_MENU' })
   }

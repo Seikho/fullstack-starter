@@ -1,14 +1,13 @@
 import './guest.scss'
 import * as React from 'react'
-import { stores } from '../../state'
+import { userStore } from '../../state'
 
 export const Guest: React.FC = () => {
-  const dispatch = stores.user((store) => store.dispatch)
   const signin = (user: string, pass: string) => {
-    dispatch({ type: 'REQUEST_LOGIN', username: user, password: pass })
+    userStore.dispatch({ type: 'REQUEST_LOGIN', username: user, password: pass })
   }
   const signup = (user: string, pass: string) => {
-    dispatch({ type: 'REQUEST_REGISTER', username: user, password: pass, confirm: pass })
+    userStore.dispatch({ type: 'REQUEST_REGISTER', username: user, password: pass, confirm: pass })
   }
 
   const [view, setView] = React.useState<'login' | 'register' | 'social'>('login')

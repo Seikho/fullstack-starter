@@ -1,5 +1,5 @@
 import { SocketApi, SocketWeb } from 'src/ws/types'
-import { createStore, Dispatcher } from '../create'
+import { createReducerStore, Dispatcher } from '../create'
 import { config } from '../config'
 import { hydrateToken } from '../util'
 
@@ -24,7 +24,7 @@ export type SocketState = {
   authed: boolean
 }
 
-export const socketStore = createStore<SocketState, SocketAction>(
+export const socketStore = createReducerStore<SocketState, SocketAction>(
   'socket',
   { init: false, connected: false, authed: false },
   {

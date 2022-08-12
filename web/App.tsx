@@ -6,7 +6,7 @@ import { Home } from './page/home'
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom'
 import { Layout, Logout } from './layout'
 import { Success } from './page/home/Success'
-import { stores } from './state'
+import { userStore } from './state'
 
 export const App = () => {
   return (
@@ -28,7 +28,7 @@ export const App = () => {
 }
 
 const Private: React.FC = () => {
-  const loggedIn = stores.user((store) => store.loggedIn)
+  const loggedIn = userStore((store) => store.loggedIn)
 
   if (!loggedIn) return <Navigate to="/" />
   return <Outlet />

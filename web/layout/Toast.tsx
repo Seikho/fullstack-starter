@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { stores } from '../state'
-import { Toast } from '../state/toast'
+import { Toast, toastStore } from '../state/toast'
 
 export const Toasts: React.FC = () => {
-  const toasts = stores.toast((store) => store.toasts)
+  const toasts = toastStore((t) => t.toasts)
 
   return (
     <div>

@@ -1,50 +1,36 @@
 import { createStore } from '../create'
 
 export type Toast = {
-  type?: 'default' | 'info' | 'warn' | 'success' | 'error' | 'naked'
+  type?: ToastType
   message?: string
   title?: string
 }
 
-type ToastType = Toast['type']
-
-type ToastAction =
-  | { type: 'ADD'; kind: ToastType; message?: string; title?: string; ttl?: number }
-  | { type: 'REMOVE'; id: number }
+type ToastType = 'default' | 'info' | 'warn' | 'success' | 'error' | 'naked'
 
 export type ToastState = {
-  toasts: Array<Toast & { id: number; ttl: Date }>
+  toasts: Array<Toast & { id: number }>
 }
 
 let toastId = 0
-export const toastStore = createStore<ToastState, ToastAction>(
-  'toast',
-  { toasts: [] },
-  {
-    ADD: ({ toasts }, action, dispatch) => {
-      let nextId = ++toastId
-      const ttl = action.ttl ?? 8
 
-      setTimeout(() => {
-        dispatch({ type: 'REMOVE', id: nextId })
-      }, ttl * 1000)
+export const toastStore = createStore<ToastState>('toast', { toasts: [] })((get, set) => {
+  const add = async function* (type: ToastType, message: string, title?: string) {
+    let id = ++toastId
+    const next = get().toasts.concat({ id, type, message, title })
+    yield { toasts: next }
 
-      return {
-        toasts: toasts.concat({
-          id: nextId,
-          type: action.kind ?? 'default',
-          message: action.message,
-          title: action.title,
-          ttl: new Date(Date.now() + ttl * 1000),
-        }),
-      }
-    },
-    REMOVE: ({ toasts }, { id }) => {
-      return { toasts: toasts.filter((t) => t.id !== id) }
-    },
+    setTimeout(() => {
+      const next = get().toasts.filter((t) => t.id !== id)
+      set({ toasts: next })
+    }, 8000)
   }
-)
 
-export function toast(kind: Toast['type'], message: string, title?: string) {
-  toastStore.getState().dispatch({ type: 'ADD', kind, message, title })
-}
+  return {
+    add: (_, kind: ToastType, message: string, title?: string) => add(kind, message, title),
+    info: (_, message: string, title?: string) => add('info', message, title),
+    warn: (_, message: string, title?: string) => add('warn', message, title),
+    success: (_, message: string, title?: string) => add('success', message, title),
+    error: (_, message: string, title?: string) => add('error', message, title),
+  }
+})

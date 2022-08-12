@@ -1,5 +1,6 @@
 import { api } from '../api'
-import { createStore } from '../create'
+import { createReducerStore } from '../create'
+import { toastStore } from '../toast'
 import { getParsedToken, parseToken, clearToken } from '../util'
 
 type UserState = {
@@ -37,7 +38,7 @@ const token = getParsedToken()
 const now = Date.now() / 1000
 const tokenValid = token ? token.exp > now : false
 
-export const userStore = createStore<UserState, UserAction>(
+export const userStore = createReducerStore<UserState, UserAction>(
   'user',
   {
     loginLoading: false,
@@ -57,6 +58,8 @@ export const userStore = createStore<UserState, UserAction>(
     RECEIVE_LOGIN: (_, { token }) => {
       const payload = parseToken(token)
       if (payload.type !== 'webapp') return { loginLoading: false }
+
+      toastStore.info('Successfully logged in')
 
       return {
         token,
@@ -81,6 +84,9 @@ export const userStore = createStore<UserState, UserAction>(
     TOGGLE_MENU: ({ menu }) => ({ menu: !menu }),
     REQUEST_LOGOUT: () => {
       clearToken()
+
+      toastStore.info('Successfully logged out')
+
       return {
         loggedIn: false,
         token: undefined,

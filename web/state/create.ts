@@ -11,8 +11,14 @@ type MaybeState<S> = Partial<S> | void
 export type Dispatcher<A extends { type: string }> = (action: A) => void
 
 type ReducerBody<S, A extends { type: string }> = {
-  [Type in A['type']]?: (state: S, action: Extract<A, { type: Type }>, dispatch: Dispatcher<A>) => ReducerReturn<S>
+  [Type in A['type']]?: (
+    state: S,
+    action: Extract<A, { type: Type }>,
+    dispatch: Dispatcher<A>
+  ) => ReducerReturn<S>
 }
+
+type SetterFunction<S> = (state: S, ...args: any[]) => ReducerReturn<S>
 
 type InitAction = { type: '__INIT' }
 
@@ -26,6 +32,12 @@ const devTools = win.__REDUX_DEVTOOLS_EXTENSION__?.connect?.() || { send: () => 
 const stores: { [name: string]: UseBoundStore<any> } = {}
 
 function send(name: string, action: any, state: any) {
+  const print = name
+
+  if (name.startsWith('[ IN]') || name.startsWith('[OUT]')) {
+    name = name.slice(6)
+  }
+
   if (action.type === '__INIT') return
   let next: any = {}
 
@@ -34,13 +46,98 @@ function send(name: string, action: any, state: any) {
   }
 
   next[name] = state
-  devTools.send({ ...action, type: `${name}.${action.type}` }, next)
+  devTools.send({ ...action, type: `${print.padEnd(15, '.')}.${action.type}` }, next)
 }
 
-export function createStore<State, Action extends { type: string }>(
+type HandlerArgs<T> = T extends (first: any, ...args: infer U) => any ? U : never
+
+type StateSetter<S> = (next: Partial<S>) => void
+
+export function createStore<State extends {}>(name: string, init: State) {
+  let setter: any
+  let getter: any
+
+  const store = create<State>((set, get) => {
+    setter = set
+    getter = get
+
+    return { ...init }
+  })
+
+  stores[name] = store
+
+  const setup = <Handler extends { [key: string]: SetterFunction<State> }>(
+    handlers: (getState: () => State, setState: StateSetter<State>) => Handler
+  ) => {
+    let wrapped: {
+      [key in keyof Handler]: (...args: HandlerArgs<Handler[key]>) => void
+    } = {} as any
+
+    const wrappedSetter = (next: any) => {
+      if (!next) return
+      send(`[OUT] ${name}`, { type: 'setter' }, { ...getter(), ...next })
+      setter(next)
+    }
+
+    const rawHandlers = handlers(getter, wrappedSetter)
+
+    for (const [key, handler] of Object.entries(rawHandlers) as Array<[keyof Handler, any]>) {
+      wrapped[key] = async (...args: any[]) => {
+        const prev = getter()
+        const result = handler(getter(), ...args)
+        send(`[ IN] ${name}`, { type: key, args }, prev)
+        if (!result) return
+
+        if (isPromise<State>(result)) {
+          const nextState = await result
+          const next = { ...prev, ...nextState }
+          send(`[OUT] ${name}`, { type: key, args }, next)
+          setter(next)
+          return
+        }
+
+        if (isGenerator<State>(result)) {
+          let next = { ...prev }
+
+          do {
+            const { done, value: nextState } = await result.next()
+            if (done === undefined) return
+            if (!nextState) return
+            next = { ...next, ...nextState }
+            send(`[OUT] ${name}`, { type: key, args }, next)
+            setter(next)
+            if (done) return
+          } while (true)
+        }
+
+        const next = { ...prev, ...result }
+        send(`[OUT] ${name}`, { type: key, args }, next)
+        setter(next)
+      }
+    }
+
+    type Wrapped = { [key in keyof Handler]: (...args: HandlerArgs<Handler[key]>) => void }
+
+    type PatchedStore = typeof store & Wrapped
+    const patchedStore = store as PatchedStore
+
+    for (const key of Object.keys(wrapped) as Array<keyof Handler>) {
+      patchedStore[key] = wrapped[key] as any
+    }
+
+    stores[name] = patchedStore
+
+    return patchedStore
+  }
+
+  send(`[ IN] ${name}`, { type: 'INIT' }, init)
+  return setup
+}
+
+export function createReducerStore<State, Action extends { type: string }>(
   name: string,
   init: State,
-  handlers: ReducerBody<State, BaseAction<Action>>
+  reducers: ReducerBody<State, BaseAction<Action>>
 ) {
   const listeners: Array<{ type: string; callback: any }> = []
   const reducer = async (
@@ -52,7 +149,8 @@ export function createStore<State, Action extends { type: string }>(
     if (!action) return state
 
     const type = action.type as BaseAction<Action>['type']
-    const handler = handlers[type]
+    const handler = reducers[type]
+    send(`[ IN] ${name}`, action, state)
     if (!handler) {
       return
     }
@@ -63,7 +161,7 @@ export function createStore<State, Action extends { type: string }>(
     if (isPromise<State>(result)) {
       const nextState = await result
       const next = { ...state, ...nextState }
-      send(name, action, next)
+      send(`[OUT] ${name}`, action, state)
       setter(next)
       return
     }
@@ -76,14 +174,14 @@ export function createStore<State, Action extends { type: string }>(
         if (done === undefined) return
         if (!nextState) return
         next = { ...next, ...nextState }
-        send(name, action, next)
+        send(`[OUT] ${name}`, action, state)
         setter(next)
         if (done) return
       } while (true)
     }
 
     const next = { ...state, ...result }
-    send(name, action, next)
+    send(`[OUT] ${name}`, action, state)
     setter(next)
   }
 
@@ -108,7 +206,10 @@ export function createStore<State, Action extends { type: string }>(
 
   type PatchedStore = typeof store & {
     dispatch: Dispatcher<Action>
-    listen: <T extends Action['type']>(type: T, callback: (action: Extract<Action, { type: T }>) => any) => void
+    listen: <T extends Action['type']>(
+      type: T,
+      callback: (action: Extract<Action, { type: T }>) => any
+    ) => void
   }
 
   const patchedStore = store as PatchedStore
@@ -119,7 +220,7 @@ export function createStore<State, Action extends { type: string }>(
 
   stores[name] = store
 
-  send(name, { type: 'INIT' }, init)
+  send(`[ IN] ${name}`, { type: 'INIT' }, init)
   return patchedStore
 }
 
@@ -130,7 +231,9 @@ function isPromise<S>(value: any): value is Promise<Partial<S> | void> {
 
 function isGenerator<S>(
   value: any
-): value is AsyncGenerator<Partial<S> | void, Partial<S> | void> | Generator<Partial<S>, Partial<S> | void> {
+): value is
+  | AsyncGenerator<Partial<S> | void, Partial<S> | void>
+  | Generator<Partial<S>, Partial<S> | void> {
   if (!value) return false
   return 'next' in value && typeof value.next === 'function'
 }

@@ -1,13 +1,13 @@
 import './layout.scss'
 import * as React from 'react'
-import { stores } from '../state'
+import { userStore } from '../state'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { Toasts } from './Toast'
 import { Outlet } from 'react-router'
 
 export const Layout: React.FC = () => {
-  const user = stores.user()
+  const user = userStore((u) => ({ loggedIn: u.loggedIn, menu: u.menu }))
   const mod = user.menu ? 'layout--expand' : ''
   const guestMod = user.loggedIn ? '' : 'full'
 
