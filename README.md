@@ -53,10 +53,11 @@
 
 ## Inclusions
 
-- React and Redux using [typedstate](https://github.com/seikho/typedstate)
+- React with zustand state management
 - Express
 - CQRS and Event Sourcing using [evtstore](https://github.com/seikho/evtstore)
 - Parcel.js for front-end bundling
+- MongoDB
 
 ## Utilities
 

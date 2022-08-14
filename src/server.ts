@@ -7,11 +7,17 @@ import api from './api'
 import { sessionMiddleware } from './api/middleware/auth'
 import { config } from './env'
 import { setupSocketServer } from './ws/setup-server'
+import MongoStore from 'connect-mongo'
+import { dbClient } from './db/mongo'
 
 const app = express()
 export const server = new http.Server(app)
 
 setupSocketServer(server)
+
+const usePersistedStore =
+  process.env.NODE_ENV === 'production' ||
+  (!!process.env.USE_SESSION_STORE && process.env.USE_SESSION_STORE !== 'false')
 
 app.use(express.json() as any, express.urlencoded({ extended: true }) as any)
 app.use(logMiddleware())
@@ -21,6 +27,7 @@ app.use(
   session({
     proxy: true,
     secret: config.jwtSecret,
+    store: usePersistedStore ? MongoStore.create({ clientPromise: dbClient, collectionName: 'sessions' }) : undefined,
     cookie: {
       httpOnly: true,
       maxAge: 10000 * 60 * 1000,

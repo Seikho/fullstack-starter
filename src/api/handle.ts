@@ -34,7 +34,8 @@ export type Handler = (req: ServiceRequest, res: express.Response, next: express
 export type ServiceRequest = express.Request & {
   log: AppLog
   session: {
-    userId?: string
+    user?: AuthToken | null
+
     [key: string]: any
   }
 }

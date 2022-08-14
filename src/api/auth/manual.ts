@@ -20,9 +20,11 @@ export const manual = handle(async (req, res) => {
     throw new StatusError('Invalid username or password', 401)
   }
 
-  const { token } = await auth.createToken({ userId: user.userId, username: user.username })
+  const { token, payload } = await auth.createToken({ userId: user.userId, username: user.username })
 
   req.session.userId = user.userId
+  req.session.token = token
+  req.session.auth = payload
 
   return res.json({ token: token, id: user.userId })
 })

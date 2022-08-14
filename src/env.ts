@@ -11,6 +11,7 @@ export const config = {
   auth: {
     facebook: getEnv('FACEBOOK', ''),
     google: getEnv('GOOGLE', ''),
+    useStore: process.env.NODE_ENV === 'production' || getEnv('USE_SESSION_STORE', 'false') !== 'false',
   },
   db: {
     host: getEnv('DB_HOST', 'localhost:27020'),

@@ -7,6 +7,7 @@ import { logger } from 'src/logger'
 import { facebook } from './facebook'
 import { google } from './google'
 import { manual } from './manual'
+import { logout } from './logout'
 
 export { router as default }
 
@@ -28,7 +29,6 @@ if (google) router.get('/google', google)
 if (facebook) router.get('/facebook', facebook)
 
 router.post('/login', manual)
-
+router.post('/logout', logout)
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login-failed' }), callback)
-
 router.get('/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login-failed' }), callback)

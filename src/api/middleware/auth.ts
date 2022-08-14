@@ -1,24 +1,7 @@
 import * as jwt from 'jsonwebtoken'
 import { RequestHandler, Request } from 'express'
 import { config } from 'src/env'
-
-export function wrap(handler: RequestHandler): RequestHandler {
-  const wrapped: RequestHandler = async (req, res, next) => {
-    try {
-      await handler(req, res, next)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  return wrapped
-}
-
-export class StatusError extends Error {
-  constructor(public msg: string, public status: number) {
-    super(msg)
-  }
-}
+import { ServiceRequest, StatusError } from '../handle'
 
 // One week
 const SESSION_TIME = 1440 * 7 * 60 * 1000
@@ -29,14 +12,27 @@ export const sessionMiddleware: RequestHandler = (req, _, next) => {
   next()
 }
 
-export const authMiddleware: RequestHandler = async (req, _, next) => {
-  const user = getToken(req)
-  if (!user) {
+export const authMiddleware: RequestHandler = async (req: ServiceRequest, _, next) => {
+  const token = getToken(req)
+
+  if (!req.session.user && !token) {
     return next(new StatusError('Not authorized', 401))
   }
 
-  req.user = user
-  next()
+  if (req.session.user) {
+    req.user = req.session.user
+    next()
+  }
+
+  if (token) {
+    req.session.user = token
+    req.session.save((err) => {
+      if (err) return next(err)
+      return next()
+    })
+  }
+
+  next(new StatusError('Not authorized', 401))
 }
 
 export const adminMiddleware: RequestHandler = (req, _, next) => {
