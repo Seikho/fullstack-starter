@@ -5,21 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Program2",
-      "type": "node",
-      "program": "${workspaceFolder}/build/src/index.js",
-      "request": "launch",
-      "skipFiles": ["<node_internals>/**"]
-      // "sourceMaps": true,
-      // "console": "externalTerminal"
-    },
-    {
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/src/index.ts",
-      "outFiles": ["${workspaceFolder}/build"],
+      "outFiles": ["${workspaceFolder}/build/**/*.js"],
       "outputCapture": "std",
       "console": "integratedTerminal",
       "sourceMaps": true
