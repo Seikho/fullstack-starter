@@ -1,19 +1,17 @@
 import { api } from '../api'
 import { createReducerStore } from '../create'
 import { toastStore } from '../toast'
-import { getParsedToken, parseToken, clearToken } from '../util'
+import { parseToken, clearToken } from '../util'
 
 type UserState = {
+  initialUrl?: string
   loginLoading: boolean
-  alias?: string
-  email?: string
-  token?: string
-  userId: string
   loggedIn: boolean
   loginError?: string
   registerError?: string
   isAdmin: boolean
   menu: boolean
+  user?: AuthToken
 }
 
 type UserAction =
@@ -33,42 +31,56 @@ type UserAction =
   | { type: 'REQUEST_REGISTER'; username: string; password: string; confirm: string }
   | { type: 'REQUEST_LOGOUT' }
   | { type: 'TOGGLE_MENU' }
-
-const token = getParsedToken()
-const now = Date.now() / 1000
-const tokenValid = token ? token.exp > now : false
+  | { type: 'CLEAR_URL' }
+  | { type: 'WHOAMI' }
 
 export const userStore = createReducerStore<UserState, UserAction>(
   'user',
   {
-    loginLoading: false,
-    loggedIn: tokenValid,
-    userId: token?.sub ?? '',
+    initialUrl: location.pathname === '/' ? '' : location.pathname,
+    loginLoading: true,
+    loggedIn: false,
     isAdmin: false,
     menu: false,
   },
   {
-    REQUEST_LOGIN: async function* (_, { username, password }, dispatch) {
+    __INIT: (_, __, dispatch) => {
+      dispatch({ type: 'WHOAMI' })
+    },
+    CLEAR_URL: async () => ({ initialUrl: '' }),
+    WHOAMI: async function* () {
+      const { error, result } = await api.get<AuthToken>('/auth/whoami')
+      yield { loginLoading: false }
+
+      if (error || !result?.sub) {
+        return { initialUrl: '' }
+      }
+
+      return {
+        loginLoading: false,
+        loggedIn: true,
+        user: result,
+      }
+    },
+    REQUEST_LOGIN: async function* (_, { username, password }) {
       yield { loginLoading: true }
       const { result, error } = await api.post('/auth/login', { username, password })
-      if (error) return { loginLoading: false, loginError: error }
+      yield { loginLoading: false }
+      if (error) return { loginError: error }
 
-      dispatch({ type: 'RECEIVE_LOGIN', token: result.token })
+      return { loggedIn: true, user: result.user }
     },
     RECEIVE_LOGIN: (_, { token }) => {
+      if (!token) return
       const payload = parseToken(token)
       if (payload.type !== 'webapp') return { loginLoading: false }
 
       toastStore.info('Successfully logged in')
 
       return {
-        token,
         loginLoading: false,
         loggedIn: true,
-        alias: payload.alias,
-        userId: payload.sub,
-        email: payload.email,
-        isAdmin: payload.isAdmin ?? false,
+        user: payload,
       }
     },
     REQUEST_REGISTER: async (_, { username, password, confirm }, dispatch) => {
@@ -82,17 +94,15 @@ export const userStore = createReducerStore<UserState, UserAction>(
       dispatch({ type: 'RECEIVE_LOGIN', token: result })
     },
     TOGGLE_MENU: ({ menu }) => ({ menu: !menu }),
-    REQUEST_LOGOUT: () => {
+    REQUEST_LOGOUT: async function* () {
+      await api.post('/auth/logout')
       clearToken()
 
       toastStore.info('Successfully logged out')
 
       return {
         loggedIn: false,
-        token: undefined,
-        userId: undefined,
-        email: undefined,
-        alias: undefined,
+        user: undefined,
       }
     },
   }

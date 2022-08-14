@@ -7,7 +7,7 @@ const Body = {
   password: 'string',
 } as const
 
-export const manual = handle(async (req, res) => {
+export const manual = handle(async (req, res, next) => {
   assertValid(Body, req.body)
 
   const user = await auth.getUser(req.body.username)
@@ -20,11 +20,11 @@ export const manual = handle(async (req, res) => {
     throw new StatusError('Invalid username or password', 401)
   }
 
-  const { token, payload } = await auth.createToken({ userId: user.userId, username: user.username })
+  const { payload } = await auth.createToken({ userId: user.userId, username: user.username })
 
-  req.session.userId = user.userId
-  req.session.token = token
-  req.session.auth = payload
-
-  return res.json({ token: token, id: user.userId })
+  req.session.user = payload
+  req.session.save((err) => {
+    if (err) return next(err)
+    res.json({ id: user.userId, user: payload })
+  })
 })

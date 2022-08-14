@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-
 import { Layout, Logout } from './layout'
 import { Success } from './page/home/Success'
 import { userStore } from './state'
+import { Profile } from './page/profile'
 
 export const App = () => {
   return (
@@ -14,13 +15,12 @@ export const App = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/success" element={<Success />} />
-          <Route path="/" element={<Home />} />
           <Route element={<Private />}>
-            <Route path="/profile" element={<div>Profile</div>} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/" element={<Home />} />
           </Route>
+          <Route path="/" element={<Home />} />
         </Route>
       </Routes>
     </Router>

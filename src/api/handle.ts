@@ -11,7 +11,7 @@ export function handle(handler: Handler) {
 
     try {
       const result = await handler(req as any, res, wrappedNext)
-      if (!res.headersSent && !nextCalled) {
+      if (!res.headersSent && !nextCalled && !!result) {
         res.json(result)
       }
     } catch (ex) {

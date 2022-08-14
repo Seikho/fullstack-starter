@@ -22,7 +22,7 @@ let database: Db | null = null
 export const dbClient = MongoClient.connect(uri, { ignoreUndefined: true })
 
 export const db = dbClient.then((client) => {
-  logger.info(`Connected to database (${config.db.host})`)
+  logger.info(`Connected to database (${config.db.host}/${config.db.database})`)
   const conn = client.db(config.db.database)
   database = conn
   return conn

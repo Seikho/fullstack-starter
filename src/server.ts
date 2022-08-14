@@ -15,10 +15,6 @@ export const server = new http.Server(app)
 
 setupSocketServer(server)
 
-const usePersistedStore =
-  process.env.NODE_ENV === 'production' ||
-  (!!process.env.USE_SESSION_STORE && process.env.USE_SESSION_STORE !== 'false')
-
 app.use(express.json() as any, express.urlencoded({ extended: true }) as any)
 app.use(logMiddleware())
 app.use(cors())
@@ -27,7 +23,9 @@ app.use(
   session({
     proxy: true,
     secret: config.jwtSecret,
-    store: usePersistedStore ? MongoStore.create({ clientPromise: dbClient, collectionName: 'sessions' }) : undefined,
+    store: config.auth.useStore
+      ? MongoStore.create({ clientPromise: dbClient, collectionName: 'sessions', dbName: config.db.database })
+      : undefined,
     cookie: {
       httpOnly: true,
       maxAge: 10000 * 60 * 1000,

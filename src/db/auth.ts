@@ -56,7 +56,7 @@ async function createToken(user: Omit<Auth, 'hash'>) {
     throw new Error('User not found')
   }
 
-  const payload: BaseToken = {
+  const base: BaseToken = {
     type: 'webapp',
     expires,
     sub: user.userId,
@@ -66,7 +66,8 @@ async function createToken(user: Omit<Auth, 'hash'>) {
   }
 
   const expiresIn = (ONE_HOUR_MS * config.jwtExpiry) / 1000
-  const token = jwt.sign(payload, config.jwtSecret, { expiresIn })
+  const token = jwt.sign(base, config.jwtSecret, { expiresIn })
+  const payload = jwt.decode(token) as AuthToken
   return { token, payload }
 }
 
